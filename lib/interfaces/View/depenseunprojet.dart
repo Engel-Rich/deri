@@ -43,14 +43,9 @@ class _DepensesUnProjetState extends State<DepensesUnProjet> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-                  child: Text(widget.projet.titreProjet, style: styletitle),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+              child: Text(widget.projet.titreProjet, style: styletitle),
             ),
             StreamBuilder<List<Depenses>>(
                 stream:

@@ -110,6 +110,7 @@ class _DetailTaslState extends State<DetailTasl> {
                                           // decoration: const BoxDecoration(
                                           //     shape: BoxShape.circle,
                                           //     color: Colors.blueAccent),
+                                          backgroundColor: Colors.blue[50],
                                           radius: 90,
                                           child: (snapshot.hasData &&
                                                   !snapshot.hasError &&
@@ -120,6 +121,7 @@ class _DetailTaslState extends State<DetailTasl> {
                                                     snapshot.data!.profile!,
                                                     fit: BoxFit.cover,
                                                     width: double.infinity,
+                                                    height: double.infinity,
                                                   ),
                                                 )
                                               : const Center(

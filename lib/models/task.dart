@@ -26,11 +26,9 @@ class Task {
     this.pourcentage = 0.0,
   });
 
-  saveTask() async {
+  static setProjectVal(idProjetPere) async {
     int taille = 0;
     final projet = projetCollections.doc(idProjetPere.toString());
-    final collection = taskCollection(idProjetPere.toString());
-    await collection.doc(idTask.toString()).set(toMap());
     await projetCollections
         .doc(idProjetPere.toString())
         .update({"pourcentage": 0.0});
@@ -51,6 +49,14 @@ class Task {
       print("value : $val");
       await projet.update({"pourcentage": FieldValue.increment(val)});
     }
+  }
+
+  saveTask() async {
+    int taille = 0;
+    final projet = projetCollections.doc(idProjetPere.toString());
+    final collection = taskCollection(idProjetPere.toString());
+    await collection.doc(idTask.toString()).set(toMap());
+    setProjectVal(idProjetPere);
     // final connection = await DatabaseOnline.instance.connection();
     // await connection.query(
     //   "INSERT INTO Task(idTask,idProjetPere,titleTask,limiteTask,statusTask,userId) VALUES (?,?,?,?,?,?)",
@@ -263,6 +269,7 @@ class SousTask {
         }
       });
     }
+    Task.setProjectVal(idProjet);
   }
 
   delete() async {
@@ -297,6 +304,7 @@ class SousTask {
         }
       });
     }
+    Task.setProjectVal(idProjet);
   }
 
   voir() {
@@ -348,6 +356,7 @@ titre: $titre''');
         }
       });
     }
+    Task.setProjectVal(idProjet);
   }
 
   static Stream<List<SousTask>> soutask(

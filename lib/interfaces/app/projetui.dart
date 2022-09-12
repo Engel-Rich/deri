@@ -4,8 +4,10 @@ import 'package:deri/models/projet.dart';
 import 'package:deri/variables.dart';
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:page_transition/page_transition.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 // import 'package:readmore/readmore.dart';
 
 class ProjetUi extends StatefulWidget {
@@ -15,14 +17,29 @@ class ProjetUi extends StatefulWidget {
   State<ProjetUi> createState() => _ProjetUiState();
 }
 
-class _ProjetUiState extends State<ProjetUi> {
+class _ProjetUiState extends State<ProjetUi>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  @override
+  void initState() {
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1200));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(
           horizontal: taille(context).width < 640
-              ? taille(context).width * 0.040
+              ? taille(context).width * 0.020
               : taille(context).width * 0.075,
           vertical: 25,
         ),
@@ -36,17 +53,17 @@ class _ProjetUiState extends State<ProjetUi> {
                   ? Center(
                       child: Text("Aucun Projet enrégistré ", style: styletext))
                   : (snapshot.hasData && snapshot.data!.isNotEmpty)
-                      ? ListView.separated(
+                      ? ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             return expension(listProjet![index], context);
                           },
-                          separatorBuilder: (context, index) {
-                            return const Divider(
-                              height: 2.0,
-                              thickness: 1.0,
-                            );
-                          },
+                          // separatorBuilder: (context, index) {
+                          //   return const Divider(
+                          //     height: 2.0,
+                          //     thickness: 1.0,
+                          //   );
+                          // },
                           itemCount: snapshot.data!.length,
                         )
                       : snapshot.hasError
@@ -89,7 +106,7 @@ class _ProjetUiState extends State<ProjetUi> {
 Widget expension(Projet projet, BuildContext context) {
   return Container(
     padding: taille(context).width < 640
-        ? const EdgeInsets.all(15)
+        ? const EdgeInsets.symmetric(vertical: 4, horizontal: 8)
         : const EdgeInsets.all(50),
     child: InkWell(
       onTap: () {
@@ -102,53 +119,88 @@ Widget expension(Projet projet, BuildContext context) {
           ),
         );
       },
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: (projet.images == null || projet.images!.isEmpty)
-                ? Image.asset(
-                    "assets/logo.png",
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.zero,
+        child: ListTile(
+          contentPadding: const EdgeInsets.all(2),
+          subtitle: LinearPercentIndicator(
+            progressColor: Colors.green.shade800,
+            animateFromLastPercent: true,
+            percent: projet.pourcentage / 100,
+            lineHeight: 5.0,
+          ),
+          title: Text(projet.titreProjet,
+              overflow: TextOverflow.ellipsis, style: styletitle),
+          leading: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.blueGrey[50]),
+            height: 100,
+            width: 55,
+            child: (projet.images == null || projet.images!.trim().isEmpty)
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      "assets/logo.png",
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   )
-                : Image.network(
-                    projet.images!,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      return loadingProgress != null
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : child;
-                    },
-                    fit: BoxFit.cover,
-                    width: double.infinity,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: projet.images!.isEmpty
+                        ? SpinKitSpinningLines(
+                            // controller: _controller,
+                            color: Colors.blueGrey.shade300)
+                        : Image.network(
+                            projet.images!,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              return loadingProgress != null
+                                  ? Center(
+                                      child: SpinKitSpinningLines(
+                                          // controller: _controller,
+                                          color: Colors.blueGrey.shade300),
+                                    )
+                                  : child;
+                            },
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
                   ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Flexible(
-                    flex: 5,
-                    child: Text(projet.titreProjet,
-                        maxLines: 3,
-                        textAlign: TextAlign.justify,
-                        overflow: TextOverflow.ellipsis,
-                        style: styletitle.copyWith(
-                            letterSpacing: 1.5,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16))),
-                const Flexible(
-                  flex: 1,
-                  child: Icon(Icons.arrow_forward_ios, size: 35),
-                )
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
+
+      // Column(
+      //   children: [
+
+      //     Padding(
+      //       padding: const EdgeInsets.symmetric(vertical: 15.0),
+      //       child: Row(
+      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //         children: [
+      //           Flexible(
+      //               flex: 5,
+      //               child: Text(projet.titreProjet,
+      //                   maxLines: 3,
+      //                   textAlign: TextAlign.justify,
+      //                   overflow: TextOverflow.ellipsis,
+      //                   style: styletitle.copyWith(
+      //                       letterSpacing: 1.5,
+      //                       fontWeight: FontWeight.w700,
+      //                       fontSize: 16))),
+      //           const Flexible(
+      //             flex: 1,
+      //             child: Icon(Icons.arrow_forward_ios, size: 35),
+      //           )
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
     ),
   );
   // return ExpansionTile(

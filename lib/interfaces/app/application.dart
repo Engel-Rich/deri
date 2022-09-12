@@ -117,7 +117,9 @@ class _ApplicationState extends State<Application> {
             },
             icon: !dark!
                 ? const Icon(Icons.light_mode)
-                : const Icon(Icons.dark_mode),
+                : const Icon(
+                    Icons.dark_mode,
+                  ),
           )
         ],
         title: Text(

@@ -11,7 +11,7 @@ import 'package:deri/models/task.dart';
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -24,9 +24,9 @@ class DetailProjet extends StatefulWidget {
 }
 
 class _DetailProjetState extends State<DetailProjet> {
-  final _formkey = GlobalKey<FormState>();
-  final TextEditingController _controllertitle = TextEditingController();
-  final TextEditingController _controllerdate = TextEditingController();
+  // final _formkey = GlobalKey<FormState>();
+  // final TextEditingController _controllertitle = TextEditingController();
+  // final TextEditingController _controllerdate = TextEditingController();
   // List<Users> list = [];
   // void listUser() async {
   //   var liste = await Users.userList();
@@ -224,10 +224,45 @@ class _DetailProjetState extends State<DetailProjet> {
                                             ),
                                           ),
                                           child: ListTile(
-                                            leading: const CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  "assets/taskview.png"),
-                                            ),
+                                            leading: snapshot.data![index]
+                                                    .userId.isNotEmpty
+                                                ? StreamBuilder<UserApp>(
+                                                    stream: UserApp
+                                                        .getOneUserStream(
+                                                            snapshot
+                                                                .data![index]
+                                                                .userId),
+                                                    builder: (context, snapu) {
+                                                      return (!snapu.hasError &&
+                                                              snapu.hasData &&
+                                                              snapu.data!
+                                                                      .profile !=
+                                                                  null)
+                                                          ? CircleAvatar(
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .blue[50],
+                                                              backgroundImage:
+                                                                  NetworkImage(snapu
+                                                                      .data!
+                                                                      .profile!),
+                                                            )
+                                                          : CircleAvatar(
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .blue[50],
+                                                              backgroundImage:
+                                                                  const AssetImage(
+                                                                      "assets/taskview.png"),
+                                                            );
+                                                    })
+                                                : CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.blue[50],
+                                                    backgroundImage:
+                                                        const AssetImage(
+                                                            "assets/taskview.png"),
+                                                  ),
                                             title: Text(
                                               snapshot.data![index].titleTask,
                                               style: styletitle,

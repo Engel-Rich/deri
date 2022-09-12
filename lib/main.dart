@@ -22,15 +22,15 @@ void main() async {
 class DeriAfrica extends StatelessWidget {
   DeriAfrica({Key? key}) : super(key: key);
   final themeController = Get.put(ThemeServices());
-  final theme = Get.put(Themes());
+ 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // initialBinding: StoreBinding(),
-      // themeMode: themeController.theme,
-      theme: theme.theme.value,
-      // darkTheme: Themes.dark,
+      initialBinding: StoreBinding(),
+      themeMode: themeController.theme,
+      theme: Themes.light,
+      darkTheme: Themes.dark,
       home: StreamBuilder<User?>(
           stream: authentication.authStateChanges(),
           builder: (context, snapshot) {
