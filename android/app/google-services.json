@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "940324675493",
+    "project_id": "deri-f1ee1",
+    "storage_bucket": "deri-f1ee1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940324675493:android:9fe0c5f865168b24b8924c",
+        "android_client_info": {
+          "package_name": "com.example.deri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940324675493-mtfe0otngofjjjeou6hobaqr75lgtaat.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9p7PyJ0KcapmFlFw2FIst3fV5CF9satc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940324675493-mtfe0otngofjjjeou6hobaqr75lgtaat.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
