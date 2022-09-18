@@ -30,17 +30,26 @@ final depenseorder = [0, 1];
 
 final orderFinances = ['Incom', 'Expense'];
 
-spinkit(BuildContext context) => SpinKitFadingCircle(
+spinkit(BuildContext context) => SpinKitSpinningLines(
+      color: Colors.blue.shade300,
       size: taille(context).width > 640 ? 150 : 70,
-      itemBuilder: (BuildContext context, int index) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: index.isEven
-                ? Colors.red
-                : const Color.fromARGB(255, 76, 84, 175),
-          ),
-        );
-      },
+      // itemBuilder: (BuildContext context, int index) {
+      //   return DecoratedBox(
+      //     decoration: BoxDecoration(
+      //       color: index.isEven
+      //           ? Colors.red
+      //           : const Color.fromARGB(255, 76, 84, 175),
+      //     ),
+      //   );
+      // },
+    );
+bouttonBack(context, {double? taille = 24}) => IconButton(
+      icon: Icon(
+        Icons.arrow_back_ios,
+        size: taille,
+        color: Colors.blueAccent.shade700,
+      ),
+      onPressed: () => Navigator.of(context).pop(),
     );
 spacerheight(double h) => SizedBox(height: h);
 

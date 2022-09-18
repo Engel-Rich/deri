@@ -37,7 +37,7 @@ class _AgendaUIState extends State<AgendaUI> {
               return RefreshIndicator(
                 key: _refreshIndicatorKey,
                 onRefresh: () async {
-                  await Agenda.agendas();
+                  Agenda.agendas();
                   setState(() {});
                 },
                 child: ScrollConfiguration(
@@ -367,6 +367,7 @@ class _AgendaUIState extends State<AgendaUI> {
                                     onPressed: () {
                                       if (_formkey.currentState!.validate()) {
                                         Agenda agenda = Agenda(
+                                          ispass: false,
                                           idAgenda: DateTime.now()
                                               .millisecondsSinceEpoch
                                               .toString(),

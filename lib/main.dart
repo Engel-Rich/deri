@@ -7,6 +7,7 @@ import 'package:deri/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'package:get_storage/get_storage.dart';
@@ -17,18 +18,19 @@ void main() async {
   await Firebase.initializeApp();
 
   runApp(DeriAfrica());
+  const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
 }
 
 class DeriAfrica extends StatelessWidget {
   DeriAfrica({Key? key}) : super(key: key);
   final themeController = Get.put(ThemeServices());
- 
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialBinding: StoreBinding(),
-      themeMode: themeController.theme,
+      themeMode: ThemeServices().theme,
       theme: Themes.light,
       darkTheme: Themes.dark,
       home: StreamBuilder<User?>(

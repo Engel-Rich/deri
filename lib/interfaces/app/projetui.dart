@@ -2,13 +2,11 @@ import 'package:deri/interfaces/View/detailprojet.dart';
 import 'package:deri/interfaces/adds/addprojet.dart';
 import 'package:deri/models/projet.dart';
 import 'package:deri/variables.dart';
-// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-// import 'package:readmore/readmore.dart';
 
 class ProjetUi extends StatefulWidget {
   const ProjetUi({Key? key}) : super(key: key);
@@ -88,12 +86,6 @@ class _ProjetUiState extends State<ProjetUi>
                 idProjetPere: '',
               ),
               type: PageTransitionType.bottomToTop,
-              duration: const Duration(
-                milliseconds: 400,
-              ),
-              reverseDuration: const Duration(
-                milliseconds: 400,
-              ),
             ),
           );
         },
@@ -115,13 +107,12 @@ Widget expension(Projet projet, BuildContext context) {
           PageTransition(
             child: DetailProjet(project: projet),
             type: PageTransitionType.bottomToTop,
-            duration: const Duration(milliseconds: 350),
           ),
         );
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blueAccent.withOpacity(0.4),
             borderRadius: BorderRadius.circular(10)),
         padding: EdgeInsets.zero,
         child: ListTile(
@@ -129,6 +120,7 @@ Widget expension(Projet projet, BuildContext context) {
           subtitle: LinearPercentIndicator(
             progressColor: Colors.green.shade800,
             animateFromLastPercent: true,
+            backgroundColor: Colors.amberAccent.shade100,
             percent: projet.pourcentage / 100,
             lineHeight: 5.0,
           ),
@@ -229,7 +221,7 @@ Widget expension(Projet projet, BuildContext context) {
   //             PageTransition(
   //               child: DetailProjet(project: projet),
   //               type: PageTransitionType.bottomToTop,
-  //               duration: const Duration(milliseconds: 350),
+
   //             ),
   //           );
   //         },

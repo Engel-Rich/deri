@@ -9,30 +9,47 @@ class Agenda {
   final String title;
   final String? description;
   final DateTime jour;
+  final bool ispass;
+  final int rappel;
 
   Agenda({
     required this.idAgenda,
     required this.title,
+    this.ispass = false,
     this.description,
     required this.jour,
+    this.rappel = 1,
   });
 
   factory Agenda.fromMap(Map<String, dynamic> agenda) => Agenda(
-        idAgenda: agenda['idAgenda'],
-        title: agenda['title'],
-        jour: (agenda['jour'] as Timestamp).toDate(),
-        description: agenda['description'],
-      );
+      idAgenda: agenda['idAgenda'],
+      title: agenda['title'],
+      jour: (agenda['jour'] as Timestamp).toDate(),
+      description: agenda['description'],
+      rappel: agenda['rappel'],
+      ispass: agenda["ispass"]);
 
   Map<String, dynamic> toMap() => {
         'idAgenda': idAgenda,
         'title': title,
         'jour': Timestamp.fromDate(jour),
         'description': description,
+        'ispass': ispass,
+        "rappel": rappel,
       };
 
+  // stream agenda list for spécifique date
+  static Stream<List<Agenda>> agendaSpecific(Timestamp timestamp) =>
+      agendaCollections
+          .where("jour", isEqualTo: timestamp)
+          .where("jour", isLessThanOrEqualTo: timestamp)
+          .snapshots()
+          .map((event) =>
+              event.docs.map((e) => Agenda.fromMap(e.data())).toList());
+
+  // for all
   static Stream<List<Agenda>> agendas() {
-    return agendaCollections.orderBy("jour").snapshots().map(
+    return agendaCollections.orderBy("jour", descending: true).snapshots().map(
         (event) => event.docs.map((e) => Agenda.fromMap(e.data())).toList());
     // final list = <Agenda>[];
     // final con = await DatabaseOnline.instance.connection();

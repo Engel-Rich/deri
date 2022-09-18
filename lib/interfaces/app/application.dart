@@ -1,5 +1,6 @@
 import 'package:deri/Firebases/firebaseusers.dart';
 import 'package:deri/interfaces/View/newapplication.dart';
+import 'package:deri/interfaces/adds/agendagood.dart';
 import 'package:deri/interfaces/adds/parametres.dart';
 import 'package:deri/interfaces/app/agendaui.dart';
 import 'package:deri/interfaces/app/depenseui.dart';
@@ -29,7 +30,7 @@ class _ApplicationState extends State<Application> {
   List uiList = <Widget>[
     const DepenseUi(),
     const ProjetUi(),
-    const AgendaUI(),
+    const AgendaGood(),
   ];
   void listenNotification() =>
       NotificationApi.onNotifications.stream.listen((event) {
