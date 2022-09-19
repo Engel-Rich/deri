@@ -172,7 +172,7 @@ class _AgendaGoodState extends State<AgendaGood> {
                             }
                           });
                     } else if (snapshot.hasError) {
-                      print(snapshot.error);
+                      // print(snapshot.error);
                       return Center(
                         child: texter(snapshot.error.toString()),
                       );

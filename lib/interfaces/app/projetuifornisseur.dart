@@ -8,14 +8,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class ProjetUi extends StatefulWidget {
-  const ProjetUi({Key? key}) : super(key: key);
+class ProjetUiFournisseur extends StatefulWidget {
+  const ProjetUiFournisseur({Key? key}) : super(key: key);
 
   @override
-  State<ProjetUi> createState() => _ProjetUiState();
+  State<ProjetUiFournisseur> createState() => _ProjetUiFournisseurState();
 }
 
-class _ProjetUiState extends State<ProjetUi>
+class _ProjetUiFournisseurState extends State<ProjetUiFournisseur>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   @override
@@ -42,7 +42,7 @@ class _ProjetUiState extends State<ProjetUi>
           vertical: 25,
         ),
         child: StreamBuilder<List<Projet>>(
-            stream: Projet.projets,
+            stream: Projet.projetsfournisseur,
             builder: (context, snapshot) {
               final listProjet = snapshot.data;
 
@@ -55,12 +55,6 @@ class _ProjetUiState extends State<ProjetUi>
                           itemBuilder: (context, index) {
                             return expension(listProjet![index], context);
                           },
-                          // separatorBuilder: (context, index) {
-                          //   return const Divider(
-                          //     height: 2.0,
-                          //     thickness: 1.0,
-                          //   );
-                          // },
                           itemCount: snapshot.data!.length,
                         )
                       : snapshot.hasError
@@ -72,24 +66,24 @@ class _ProjetUiState extends State<ProjetUi>
                             );
             }),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(
-          "Add Project",
-          style: styletext.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: const ProjetAdd(
-                idProjetPere: '',
-              ),
-              type: PageTransitionType.bottomToTop,
-            ),
-          );
-        },
-        icon: const Icon(Icons.business_center),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   label: Text(
+      //     "Add Project",
+      //     style: styletext.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+      //   ),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       PageTransition(
+      //         child: const ProjetAdd(
+      //           idProjetPere: '',
+      //         ),
+      //         type: PageTransitionType.bottomToTop,
+      //       ),
+      //     );
+      //   },
+      //   icon: const Icon(Icons.business_center),
+      // ),
     );
   }
 }

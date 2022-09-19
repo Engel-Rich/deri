@@ -1,6 +1,7 @@
 import 'package:deri/variables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 
 class UserApp {
   final String name;
@@ -9,21 +10,25 @@ class UserApp {
   String? password;
   String? userid;
   String? profile;
-  bool fournisseur;
-
+  bool? fournisseur;
+  bool? isadmin;
   UserApp({
     required this.name,
     required this.email,
     this.userid,
     this.password,
     this.profile,
-    this.fournisseur = false,
+    this.fournisseur,
+    this.isadmin,
   });
 
   Future<String?> register() async {
     try {
-      final userResult = await authentication.createUserWithEmailAndPassword(
-          email: email, password: password!);
+      FirebaseApp app = await Firebase.initializeApp(
+          name: "temporary", options: Firebase.app().options);
+
+      final userResult = await FirebaseAuth.instanceFor(app: app)
+          .createUserWithEmailAndPassword(email: email, password: password!);
       await userResult.user!.updateDisplayName(name);
       final uid = userResult.user!.uid;
       userid = uid;
@@ -49,7 +54,7 @@ class UserApp {
         return null;
       }
     } on FirebaseAuthException catch (e) {
-      print("Erreur firebase $e");
+      // print("Erreur firebase $e");
       return e.code;
     }
     return null;
@@ -68,15 +73,18 @@ class UserApp {
         "email": email,
         "userid": userid,
         "profile": profile,
-        'fournisseur': fournisseur
+        'fournisseur': fournisseur,
+        "isadmin": isadmin ?? false
       };
 
   factory UserApp.fromMap(Map<String, dynamic> map) => UserApp(
-      name: map['name'],
-      email: map['email'],
-      userid: map['userid'],
-      profile: map['profile'],
-      fournisseur: map['fournisseur']);
+        name: map['name'],
+        email: map['email'],
+        userid: map['userid'],
+        profile: map['profile'],
+        fournisseur: map['fournisseur'] ?? false,
+        isadmin: map["isadmin"] ?? false,
+      );
   static Stream<List<UserApp>> get userapps => userCollection.snapshots().map(
       (event) => event.docs.map((e) => UserApp.fromMap(e.data())).toList());
   static Future<List<UserApp>>? futureUser() async {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:deri/interfaces/app/application.dart';
 import 'package:deri/interfaces/app/authuser.dart';
 import 'package:deri/interfaces/app/theme.dart';
@@ -16,7 +18,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await Firebase.initializeApp();
-
   runApp(DeriAfrica());
   const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
 }

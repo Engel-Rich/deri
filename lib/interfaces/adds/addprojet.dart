@@ -260,20 +260,26 @@ class _ProjetAddState extends State<ProjetAdd> {
                                           ),
                                         ),
                                         children: snapshot.data!
-                                            .map((e) => Wrap(
-                                                  children: [
-                                                    TextButton(
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            fournisseur =
-                                                                e.name;
-                                                          });
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: texter(e.name)),
-                                                  ],
-                                                ))
+                                            .map(
+                                              (e) => e.fournisseur == true
+                                                  ? Wrap(
+                                                      children: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                fournisseur =
+                                                                    e.name;
+                                                              });
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child:
+                                                                texter(e.name)),
+                                                      ],
+                                                    )
+                                                  : Container(),
+                                            )
                                             .toList(),
                                       );
                                     })
@@ -396,7 +402,7 @@ class _ProjetAddState extends State<ProjetAdd> {
                                   Navigator.pushReplacement(
                                     context,
                                     PageTransition(
-                                      child: const Application(page: 0  ),
+                                      child: const Application(page: 0),
                                       type: PageTransitionType.bottomToTop,
                                     ),
                                   );
@@ -489,7 +495,7 @@ class _ProjetAddState extends State<ProjetAdd> {
   sendImage() {
     ImagePicker picker = ImagePicker();
 
-    String imegeUrl = "";
+    // String imegeUrl = "";
     showDialog(
         barrierDismissible: false,
         context: context,

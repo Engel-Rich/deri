@@ -99,19 +99,28 @@ class Projet {
           await projetCollections.doc(idProjet.toString()).set(toMap());
         });
       } catch (e) {
-        print(e.toString());
+        // print(e.toString());
       }
     }
   }
 
-  static Stream<List<Projet>> get projets =>
-      projetCollections.snapshots().map((snapshot) => snapshot.docs
+  static Stream<List<Projet>> get projetsfournisseur => projetCollections
+      .where("fornisseurFont",
+          isEqualTo: authentication.currentUser!.displayName)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
           .map((projet) => Projet.fromMap(projet.data()))
           .toList());
   static Stream<Projet> oneProjet(String puid) => projetCollections
       .doc(puid)
       .snapshots()
       .map((event) => Projet.fromMap(event.data()!));
+
+  static Stream<List<Projet>> get projets =>
+      projetCollections.snapshots().map((snapshot) => snapshot.docs
+          .map((projet) => Projet.fromMap(projet.data()))
+          .toList());
+
   // static Future<List<Projet>> projets() async {
   //   final List<Projet> list = [];
   //   final connection = await DatabaseOnline.instance.connection();

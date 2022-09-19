@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+class AddFournisseur extends StatefulWidget {
+  const AddFournisseur({Key? key}) : super(key: key);
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<AddFournisseur> createState() => _AddFournisseurState();
 }
 
-class _RegisterState extends State<Register> {
+class _AddFournisseurState extends State<AddFournisseur> {
   TextEditingController controllerName = TextEditingController();
   TextEditingController controllerPasse = TextEditingController();
   TextEditingController controllerEmail = TextEditingController();
@@ -23,7 +23,6 @@ class _RegisterState extends State<Register> {
   bool loading = false;
   final _formKey = GlobalKey<FormState>();
   bool visible = true;
-
   @override
   Widget build(BuildContext context) {
     return loading
@@ -85,7 +84,7 @@ class _RegisterState extends State<Register> {
                             fillColor: Get.isDarkMode
                                 ? Colors.grey.shade800
                                 : Colors.blueGrey.shade100,
-                            hintText: "enter  name",
+                            hintText: "enter name",
                             prefixIcon: Icon(
                               Icons.person,
                               size: estGrand(context) ? 30 : 24,
@@ -112,7 +111,7 @@ class _RegisterState extends State<Register> {
                             fillColor: Get.isDarkMode
                                 ? Colors.grey.shade800
                                 : Colors.blueGrey.shade100,
-                            hintText: "enter  Email",
+                            hintText: "enter Email",
                             prefixIcon: Icon(
                               Icons.email,
                               size: estGrand(context) ? 30 : 24,
@@ -144,7 +143,7 @@ class _RegisterState extends State<Register> {
                             fillColor: Get.isDarkMode
                                 ? Colors.grey.shade800
                                 : Colors.blueGrey.shade100,
-                            hintText: "enter  password",
+                            hintText: "enter password",
                             prefixIcon: InkWell(
                               onTap: () {
                                 setState(() {
@@ -160,18 +159,7 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                         spacerheight(10),
-                        // Row(
-                        //   children: [
-                        //     SwitchListTile(
-                        //       value: fournisseur,
-                        //       title: Text(
-                        //         "I have a count !",
-                        //         style: styletitle,
-                        //       ),
-                        //       onChanged: (val) {},
-                        //     ),
-                        //   ],
-                        // ),
+
                         spacerheight(40),
                         // bouton de validation
                         Container(
@@ -198,14 +186,13 @@ class _RegisterState extends State<Register> {
                                   name: controllerName.text,
                                   email: controllerEmail.text,
                                   password: controllerPasse.text,
-                                  fournisseur: false,
+                                  fournisseur: true,
                                 );
 
                                 final error = await userApp.register();
                                 print(
                                     "Error retouné : ${error.toString().trim()}");
                                 if (error == null) {
-                                  debugPrint('Aucune Erreur');
                                   // Navigator.pushReplacement(
                                   //   context,
                                   //   PageTransition(
@@ -236,7 +223,7 @@ class _RegisterState extends State<Register> {
                               size: estGrand(context) ? 30 : 24,
                             ),
                             label: Text(
-                              "Register",
+                              "Add Fournisseur",
                               style: styletitle,
                             ),
                           ),

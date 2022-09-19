@@ -31,7 +31,7 @@ class _AutresDepensesState extends State<AutresDepenses> {
       for (var val in value) {
         setState(() {
           depensesList!.add(val);
-          print(val.toMap());
+          // print(val.toMap());
         });
       }
     }
@@ -353,9 +353,9 @@ class _AutresDepensesState extends State<AutresDepenses> {
                 foregroundColor: Colors.white,
                 labelStyle: styletext,
                 onTap: () {
-                  for (var val in depensesList!) {
-                    print(val.toMap());
-                  }
+                  // for (var val in depensesList!) {
+                  //   print(val.toMap());
+                  // }
                   Navigator.of(context).push(PageTransition(
                       child:
                           PdfView(list: depensesList!, date: "Report to $time"),

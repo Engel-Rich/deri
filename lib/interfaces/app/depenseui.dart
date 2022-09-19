@@ -22,22 +22,22 @@ class _DepenseUiState extends State<DepenseUi> {
           leading: const SizedBox.shrink(),
           bottom: const TabBar(
               physics: BouncingScrollPhysics(),
-              indicator: BoxDecoration(
+              indicator: BoxDecoration(   
                 color: Colors.blue,
               ),
-              indicatorWeight: 5,
+              // indicatorWeight: 5,
               tabs: [
                 Tab(
-                  icon: Icon(Icons.business),
+                  // icon: Icon(Icons.business),
                   text: "Project",
                 ),
                 Tab(
-                  icon: Icon(Icons.admin_panel_settings_sharp),
+                  // icon: Icon(Icons.admin_panel_settings_sharp),
                   text: "Oppresinnal",
                 ),
               ]),
-          elevation: 0.0,
-          backgroundColor: Colors.blueGrey.shade400,
+          // elevation: 0.0,
+          // backgroundColor: Colors.blueGrey.shade400,
         ),
         body: const TabBarView(
           children: [
@@ -50,18 +50,3 @@ class _DepenseUiState extends State<DepenseUi> {
     );
   }
 }
-
-class TimeValue {
-  final int cles;
-  final String valeurs;
-  TimeValue(this.cles, this.valeurs);
-}
-
-var buttonOptions = [
-  TimeValue(30, "30 minutes"),
-  TimeValue(60, "1 hour"),
-  TimeValue(120, "2 hours"),
-  TimeValue(240, "4 hours"),
-  TimeValue(480, "8 hours"),
-  TimeValue(720, "12 hours"),
-];

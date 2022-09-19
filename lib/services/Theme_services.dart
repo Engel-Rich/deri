@@ -13,7 +13,7 @@ class ThemeServices extends GetxController {
 
   changeTheme() {
     Get.changeThemeMode(
-        _chargerLeThemeDeLaBox() ? ThemeMode.dark : ThemeMode.light);
+        _chargerLeThemeDeLaBox() ? ThemeMode.light : ThemeMode.dark);
     saveThemeinBox(!_chargerLeThemeDeLaBox());
   }
 }

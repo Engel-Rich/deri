@@ -45,12 +45,18 @@ dependencies:
   get_storage: ^2.0.3
   flutter_native_timezone: ^2.0.0
   date_picker_timeline: ^1.2.3
+  flutter_launcher_icons: ^0.10.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/1024.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

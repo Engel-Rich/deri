@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -63,9 +64,30 @@ CollectionReference<Map<String, dynamic>> taskCollection(String idprojet) =>
         .collection('Projet')
         .doc(idprojet)
         .collection("Task");
-final emo = "🐒💁👌🎍😍🦊👨";
+getSnack(
+  String message, {
+  String? title = "Save Error",
+  Color color = Colors.deepOrange,
+  Widget icon = const Icon(
+    Icons.error,
+    color: Colors.red,
+  ),
+}) =>
+    Get.snackbar(
+      title!,
+      message,
+      titleText: Text(title, style: styletitle),
+      messageText: Text(message, style: styletext),
+      icon: icon,
+      snackStyle: SnackStyle.FLOATING,
+      duration: const Duration(seconds: 5),
+      isDismissible: true,
+      backgroundColor: color,
+      dismissDirection: DismissDirection.horizontal,
+    );
+// final emo = "🐒💁👌🎍😍🦊👨";
 
-final iosclientId =
-    "940324675493-9dkc3ju1gv8cospr9sgh0osuqn851pvk.apps.googleusercontent.com";
-final webclient =
-    '940324675493-mtfe0otngofjjjeou6hobaqr75lgtaat.apps.googleusercontent.com';
+// final iosclientId =
+//     "940324675493-9dkc3ju1gv8cospr9sgh0osuqn851pvk.apps.googleusercontent.com";
+// final webclient =
+//     '940324675493-mtfe0otngofjjjeou6hobaqr75lgtaat.apps.googleusercontent.com';

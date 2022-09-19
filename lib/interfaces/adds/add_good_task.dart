@@ -49,27 +49,7 @@ class _AddGoodAgendaState extends State<AddGoodAgenda> {
     }
   }
 
-  getSnack(
-    String message, {
-    String? title = "Save Error",
-    Color color = Colors.deepOrange,
-    Widget icon = const Icon(
-      Icons.error,
-      color: Colors.red,
-    ),
-  }) =>
-      Get.snackbar(
-        title!,
-        message,
-        titleText: Text(title, style: styletitle),
-        messageText: Text(message, style: styletext),
-        icon: icon,
-        snackStyle: SnackStyle.FLOATING,
-        duration: const Duration(seconds: 5),
-        isDismissible: true,
-        backgroundColor: color,
-        dismissDirection: DismissDirection.horizontal,
-      );
+  
   validate() {
     if (titleController.text.trim().isNotEmpty &&
         descriptionController.text.trim().isNotEmpty) {
