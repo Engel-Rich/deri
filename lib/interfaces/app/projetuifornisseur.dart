@@ -45,7 +45,6 @@ class _ProjetUiFournisseurState extends State<ProjetUiFournisseur>
             stream: Projet.projetsfournisseur,
             builder: (context, snapshot) {
               final listProjet = snapshot.data;
-
               return (snapshot.hasData && snapshot.data!.isEmpty)
                   ? Center(
                       child: Text("Aucun Projet enrégistré ", style: styletext))
@@ -90,9 +89,10 @@ class _ProjetUiFournisseurState extends State<ProjetUiFournisseur>
 
 Widget expension(Projet projet, BuildContext context) {
   return Container(
-    padding: taille(context).width < 640
-        ? const EdgeInsets.symmetric(vertical: 4, horizontal: 8)
-        : const EdgeInsets.all(50),
+    padding: const EdgeInsets.symmetric(
+      vertical: 15,
+      horizontal: 30,
+    ),
     child: InkWell(
       onTap: () {
         Navigator.push(

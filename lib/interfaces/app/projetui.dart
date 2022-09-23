@@ -4,6 +4,7 @@ import 'package:deri/models/projet.dart';
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -51,16 +52,11 @@ class _ProjetUiState extends State<ProjetUi>
                       child: Text("Aucun Projet enrégistré ", style: styletext))
                   : (snapshot.hasData && snapshot.data!.isNotEmpty)
                       ? ListView.builder(
+                          scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return expension(listProjet![index], context);
+                            return maxUiprojet(context, snapshot.data![index]);
                           },
-                          // separatorBuilder: (context, index) {
-                          //   return const Divider(
-                          //     height: 2.0,
-                          //     thickness: 1.0,
-                          //   );
-                          // },
                           itemCount: snapshot.data!.length,
                         )
                       : snapshot.hasError
@@ -74,7 +70,7 @@ class _ProjetUiState extends State<ProjetUi>
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text(
-          "Add Project",
+          "Add",
           style: styletext.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         onPressed: () {
@@ -94,11 +90,125 @@ class _ProjetUiState extends State<ProjetUi>
   }
 }
 
+Widget maxUiprojet(BuildContext context, Projet projet) => Stack(
+      children: [
+        Container(
+          margin: const EdgeInsets.all(5),
+          height: taille(context).height * 0.7,
+          width: 260,
+          decoration: BoxDecoration(
+            image: (projet.images != null && projet.images!.isNotEmpty)
+                ? DecorationImage(
+                    image: NetworkImage(projet.images!), fit: BoxFit.cover)
+                : const DecorationImage(
+                    image: AssetImage('assets/projet.jpg'), fit: BoxFit.cover),
+            color: Colors.blue.shade300,
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20), bottom: Radius.circular(10)),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(8),
+          height: taille(context).height * 0.7,
+          width: 260,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0.25, 0.40, 0.60, 0.75, 1],
+              colors: [
+                Colors.black.withOpacity(.8),
+                Colors.black.withOpacity(.6),
+                Colors.black.withOpacity(.3),
+                Colors.white.withOpacity(.5),
+                Colors.white,
+              ],
+            ),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20), bottom: Radius.circular(10)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const CircleAvatar(
+                  backgroundColor: Colors.orangeAccent,
+                  radius: 25,
+                  child:
+                      Icon(Icons.calendar_today, color: Colors.white, size: 30),
+                ),
+                title: Text(
+                  "To ${DateFormat("EE d MMM y").format(projet.dateDebut)} ",
+                  style: styletitle.copyWith(
+                      color: Colors.white, letterSpacing: 1),
+                ),
+                subtitle: Text(
+                  "At ${DateFormat("EE d MMM y").format(projet.dateFin)}",
+                  style: styletext.copyWith(
+                      color: Colors.white,
+                      letterSpacing: 1,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+              spacerheight(20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Center(
+                    child: CircularPercentIndicator(
+                      radius: 24,
+                      backgroundColor: Colors.orangeAccent,
+                      percent: projet.pourcentage / 100,
+                      progressColor: Colors.green,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  Text(
+                    "Progress : ${projet.pourcentage.toStringAsFixed(2)}  %",
+                    style: styletitle.copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 25.0,
+              ),
+              Text(
+                projet.titreProjet,
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+                style: styletext.copyWith(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    wordSpacing: 1.5),
+              ),
+              Expanded(child: Container()),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  projet.descriptionProjet,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: styletext.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+
+// expension
 Widget expension(Projet projet, BuildContext context) {
   return Container(
-    padding: taille(context).width < 640
-        ? const EdgeInsets.symmetric(vertical: 4, horizontal: 8)
-        : const EdgeInsets.all(50),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
     child: InkWell(
       onTap: () {
         Navigator.push(
@@ -109,64 +219,68 @@ Widget expension(Projet projet, BuildContext context) {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.blueAccent.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(10)),
-        padding: EdgeInsets.zero,
-        child: ListTile(
-          contentPadding: const EdgeInsets.all(2),
-          subtitle: LinearPercentIndicator(
-            progressColor: Colors.green.shade800,
-            animateFromLastPercent: true,
-            backgroundColor: Colors.amberAccent.shade100,
-            percent: projet.pourcentage / 100,
-            center: Text(
-              "${projet.pourcentage} %",
-              style:
-                  styletext.copyWith(fontSize: 5, fontWeight: FontWeight.bold),
-            ),
-            lineHeight: 7.0,
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(2),
+        focusColor: Colors.green,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: const BorderSide(color: Colors.blueGrey)),
+        subtitle: LinearPercentIndicator(
+          progressColor: Colors.green.shade800,
+          animateFromLastPercent: true,
+          backgroundColor: Colors.amberAccent.shade100,
+          percent: projet.pourcentage / 100,
+          center: Text(
+            "${projet.pourcentage} %",
+            style: styletext.copyWith(fontSize: 5, fontWeight: FontWeight.bold),
           ),
-          title: Text(projet.titreProjet,
-              overflow: TextOverflow.ellipsis, style: styletitle),
-          leading: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.blueGrey[50]),
-            height: 100,
-            width: 55,
-            child: (projet.images == null || projet.images!.trim().isEmpty)
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      "assets/logo.png",
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: projet.images!.isEmpty
-                        ? SpinKitSpinningLines(
-                            // controller: _controller,
-                            color: Colors.blueGrey.shade300)
-                        : Image.network(
-                            projet.images!,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              return loadingProgress != null
-                                  ? Center(
-                                      child: SpinKitSpinningLines(
-                                          // controller: _controller,
-                                          color: Colors.blueGrey.shade300),
-                                    )
-                                  : child;
-                            },
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
+          lineHeight: 7.0,
+        ),
+        title: Text(projet.titreProjet,
+            overflow: TextOverflow.ellipsis, style: styletitle),
+        leading: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.blueGrey[50]),
+          height: 100,
+          width: 55,
+          child: (projet.images == null || projet.images!.trim().isEmpty)
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset(
+                    "assets/projet.jpg",
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-          ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: projet.images!.isEmpty
+                      ? SpinKitSpinningLines(
+                          // controller: _controller,
+                          color: Colors.blueGrey.shade300)
+                      : Image.network(
+                          projet.images!,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            return loadingProgress != null
+                                ? Center(
+                                    child: SpinKitSpinningLines(
+                                        // controller: _controller,
+                                        color: Colors.blueGrey.shade300),
+                                  )
+                                : child;
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Text(
+                              'Error',
+                              style:
+                                  styletext.copyWith(color: Colors.redAccent),
+                            );
+                          },
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                ),
         ),
       ),
 

@@ -59,6 +59,7 @@ final userCollection = FirebaseFirestore.instance.collection('Users');
 final depenseCollections = FirebaseFirestore.instance.collection('Depenses');
 final projetCollections = FirebaseFirestore.instance.collection('Projet');
 final agendaCollections = FirebaseFirestore.instance.collection('Agenda');
+final tokenCollections = FirebaseFirestore.instance.collection('Token');
 CollectionReference<Map<String, dynamic>> taskCollection(String idprojet) =>
     FirebaseFirestore.instance
         .collection('Projet')

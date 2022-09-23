@@ -1,3 +1,4 @@
+import 'package:deri/interfaces/adds/agendagood.dart';
 import 'package:deri/interfaces/adds/parametres.dart';
 
 import 'package:deri/interfaces/app/agendaui.dart';
@@ -18,7 +19,7 @@ class _NewApplicationState extends State<NewApplication> {
   List uiList = <Widget>[
     const ProjetUi(),
     const DepenseUi(),
-    const AgendaUI(),
+    const AgendaGood(),
     const Parametre(),
   ];
   @override

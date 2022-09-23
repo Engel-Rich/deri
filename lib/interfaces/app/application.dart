@@ -12,6 +12,7 @@ import 'package:deri/interfaces/app/theme.dart';
 // import 'package:deri/interfaces/app/trsition.dart';
 
 import 'package:deri/services/notification.dart';
+import 'package:deri/services/notificationservices.dart';
 // import 'package:deri/models/user.dart';
 
 import 'package:deri/variables.dart';
@@ -44,6 +45,9 @@ class _ApplicationState extends State<Application> {
   bool? dark;
   @override
   void initState() {
+    NotificationServices().requestPermission();
+    NotificationServices().getToken();
+    NotificationServices().initInfos();
     dark = Get.isDarkMode;
     selectedindex = widget.page;
     NotificationApi.init();

@@ -132,7 +132,7 @@ class _DetailProjetState extends State<DetailProjet> {
                                     ? LinearPercentIndicator(
                                         curve: Curves.bounceInOut,
                                         center: Text(
-                                            '${snapshot.data!.pourcentage} %',
+                                            '${snapshot.data!.pourcentage.toInt()} %',
                                             style: styletitle),
                                         progressColor: Colors.green,
                                         backgroundColor: Colors.amber.shade100,
@@ -400,20 +400,6 @@ class _DetailProjetState extends State<DetailProjet> {
                                                                     )
                                                                   ];
                                                                 }
-                                                                // } else if (Users
-                                                                //         .userSession.userId ==
-                                                                //     snapshot.data![index]
-                                                                //         .userId) {
-                                                                //   return [
-                                                                //     PopupMenuItem(
-                                                                //       value: 2,
-                                                                //       child: texter(
-                                                                //           "Set Statue"),
-                                                                //     )
-                                                                //   ];
-                                                                // } else {
-                                                                //   return [];
-                                                                // }
                                                               })
                                                             : const SizedBox
                                                                 .shrink(),
@@ -454,25 +440,6 @@ class _DetailProjetState extends State<DetailProjet> {
                               ),
                               backgroundColor: Colors.blueGrey.shade500,
                               children: [
-                                // SpeedDialChild(
-                                //   onTap: () {
-                                //     Navigator.push(
-                                //       context,
-                                //       PageTransition(
-                                //         child: ProjetAdd(idProjetPere: widget.project.idProjet),
-                                //         type: PageTransitionType.fade,
-                                //       ),
-                                //     );
-                                //   },
-                                //   label: 'Add Part',
-                                //   child: const Icon(
-                                //     Icons.add_business_outlined,
-                                //     size: 30,
-                                //   ),
-                                //   backgroundColor: Colors.indigo,
-                                //   foregroundColor: Colors.orange,
-                                //   labelStyle: styletext,
-                                // ),
                                 SpeedDialChild(
                                   label: 'Add Task',
                                   child: const Icon(
@@ -486,151 +453,6 @@ class _DetailProjetState extends State<DetailProjet> {
                                     Navigator.of(context).push(PageTransition(
                                         child: AddTask(projet: widget.project),
                                         type: PageTransitionType.fade));
-                                    // await showModalBottomSheet(
-                                    //     shape: const RoundedRectangleBorder(
-                                    //       borderRadius: BorderRadius.vertical(
-                                    //         top: Radius.circular(20),
-                                    //       ),
-                                    //     ),
-                                    //     // backgroundColor: Colors.blueGrey.shade100,
-                                    //     context: context,
-                                    //     builder: (context) {
-                                    //       return Container(
-                                    //         padding: EdgeInsets.symmetric(
-                                    //           vertical: 20,
-                                    //           horizontal: taille(context).width * 0.1,
-                                    //         ),
-                                    //         child: Form(
-                                    //           key: _formkey,
-                                    //           child: Column(
-                                    //             children: [
-                                    //               Text(
-                                    //                 'Iformations of task',
-                                    //                 style: styletitle,
-                                    //               ),
-                                    //               const SizedBox(
-                                    //                 height: 30,
-                                    //                 child: Center(
-                                    //                   child: Padding(
-                                    //                     padding: EdgeInsets.all(8.0),
-                                    //                     child: Divider(),
-                                    //                   ),
-                                    //                 ),
-                                    //               ),
-                                    //               const SizedBox(
-                                    //                 height: 15.0,
-                                    //               ),
-                                    //               TextFormField(
-                                    //                 validator: (val) {
-                                    //                   return val!.trim().isEmpty
-                                    //                       ? "title of task required "
-                                    //                       : null;
-                                    //                 },
-                                    //                 controller: _controllertitle,
-                                    //                 minLines: 1,
-                                    //                 maxLines: 3,
-                                    //                 style: styletext,
-                                    //                 decoration: InputDecoration(
-                                    //                   hintText: 'title of task',
-                                    //                   hintStyle: styletext,
-                                    //                   icon: const Icon(Icons.title),
-                                    //                   border: const UnderlineInputBorder(
-                                    //                     borderSide: BorderSide(width: 1.0),
-                                    //                   ),
-                                    //                 ),
-                                    //               ),
-                                    //               const SizedBox(
-                                    //                 height: 15.0,
-                                    //               ),
-                                    //               DateTimePicker(
-                                    //                 controller: _controllerdate,
-                                    //                 validator: (value) {
-                                    //                   return value!.trim().isEmpty
-                                    //                       ? "date required"
-                                    //                       : null;
-                                    //                 },
-                                    //                 type: DateTimePickerType.date,
-                                    //                 icon: const Icon(
-                                    //                   Icons.watch_later_sharp,
-                                    //                 ),
-                                    //                 dateLabelText:
-                                    //                     DateFormat.yMEd().format(DateTime.now()),
-                                    //                 dateHintText: "Date of limit",
-                                    //                 timeLabelText: "Hour",
-                                    //                 style: styletext,
-                                    //                 timeHintText:
-                                    //                     DateFormat.Hms().format(DateTime.now()),
-                                    //                 firstDate: DateTime.now(),
-                                    //                 lastDate: DateTime(2100),
-                                    //                 onChanged: (val) {
-                                    //                   print(val);
-                                    //                 },
-                                    //               ),
-                                    //               const SizedBox(
-                                    //                 height: 20.0,
-                                    //               ),
-                                    //               Row(
-                                    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    //                 children: [
-                                    //                   TextButton(
-                                    //                     onPressed: () {
-                                    //                       Navigator.pop(context);
-                                    //                     },
-                                    //                     child: Text(
-                                    //                       'Cancel',
-                                    //                       style: styletext,
-                                    //                     ),
-                                    //                   ),
-                                    //                   TextButton(
-                                    //                     onPressed: () {
-                                    //                       if (_formkey.currentState!.validate()) {
-                                    //                         final task = Task(
-                                    //                           idTask: DateTime.now()
-                                    //                               .millisecondsSinceEpoch,
-                                    //                           idProjetPere:
-                                    //                               int.parse(widget.project.idProjet),
-                                    //                           titleTask: _controllertitle.text,
-                                    //                           limiteTask: DateTime.parse(
-                                    //                               _controllerdate.text),
-                                    //                           statusTask: status[0]!,
-                                    //                           userId: " ",
-                                    //                         );
-                                    //                         try {
-                                    //                           task.saveTask();
-                                    //                           setState(() {
-                                    //                             _formkey.currentState!.reset();
-                                    //                           });
-                                    //                           Navigator.pop(context);
-                                    //                           setState(() {});
-                                    //                           ScaffoldMessenger.of(context)
-                                    //                               .showSnackBar(
-                                    //                             SnackBar(
-                                    //                               action: SnackBarAction(
-                                    //                                   label: 'Cancel',
-                                    //                                   onPressed: () {}),
-                                    //                               content: Text(
-                                    //                                   "Task added succesful",
-                                    //                                   style: styletext),
-                                    //                             ),
-                                    //                           );
-                                    //                         } catch (e) {
-                                    //                           debugPrint(
-                                    //                               'Erreur d\'ajout de la tache : $e');
-                                    //                         }
-                                    //                       }
-                                    //                     },
-                                    //                     child: Text(
-                                    //                       'Vallide',
-                                    //                       style: styletext,
-                                    //                     ),
-                                    //                   ),
-                                    //                 ],
-                                    //               )
-                                    //             ],
-                                    //           ),
-                                    //         ),
-                                    //       );
-                                    //     });
                                   },
                                 )
                               ],
@@ -655,7 +477,6 @@ class _DetailProjetState extends State<DetailProjet> {
     BuildContext context,
     Task task,
   ) {
-    UserApp? users;
     showDialog(
         context: context,
         builder: (cntx) {

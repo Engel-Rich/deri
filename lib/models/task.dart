@@ -324,6 +324,8 @@ titre: $titre''');
       pourcent = 100;
     } else if (statutes.trim() == 'running') {
       pourcent = 30;
+    } else {
+      pourcent = 0;
     }
     await taskCollection(idProjet)
         .doc(taskid)

@@ -31,18 +31,25 @@ class NotificationApi {
           required DateTime time}) async =>
       flutterLocalNotificationsPlugin.show(
           id, title, body, await notificationDetails());
+
 // notificationdetail
-  static Future notificationDetails() async => const NotificationDetails(
-        android: AndroidNotificationDetails("channel Id", "channel Name",
-            channelDescription: 'teste de la notification',
-            icon: "@mipmap/ic_launcher",
-            playSound: true,
-            importance: Importance.max),
+  static  notificationDetails(
+          {StyleInformation? styleInformation})  =>
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          "channel Id",
+          "channel Name",
+          channelDescription: 'teste de la notification',
+          icon: "@mipmap/ic_launcher",
+          playSound: true,
+          importance: Importance.max,
+        ),
         iOS: IOSNotificationDetails(),
       );
+
   // init methode for initialisation
   static Future init({bool initNotif = false}) async {
-    nitialisation();
+    initialisation();
   }
 
 // android initialisation
@@ -85,7 +92,7 @@ class NotificationApi {
     onNotifications.add(payload);
   }
 
-  static nitialisation() {
+  static initialisation() {
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: selectNotification);
   }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:deri/Firebases/firebaseusers.dart';
 import 'package:deri/interfaces/adds/addsoustask.dart';
 import 'package:deri/interfaces/app/splash.dart';
@@ -6,7 +8,9 @@ import 'package:deri/variables.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:deri/models/task.dart";
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -32,6 +36,7 @@ class _DetailTaslState extends State<DetailTasl> {
   bool showEditUserButton = kIsWeb ? false : true;
   String idUser = "";
   bool reloadNam = true;
+  bool sending = false;
   List<UserApp> list = [];
   void listUser() async {
     var liste = await UserApp.futureUser();
@@ -174,6 +179,8 @@ class _DetailTaslState extends State<DetailTasl> {
                                                                       MainAxisAlignment
                                                                           .spaceAround,
                                                                   children: [
+                                                                    spacerheight(
+                                                                        20),
                                                                     Text(
                                                                       snapshot
                                                                           .data!
@@ -187,6 +194,8 @@ class _DetailTaslState extends State<DetailTasl> {
                                                                           TextOverflow
                                                                               .ellipsis,
                                                                     ),
+                                                                    spacerheight(
+                                                                        10),
                                                                     Text(
                                                                         snapshot
                                                                             .data!
@@ -252,7 +261,13 @@ class _DetailTaslState extends State<DetailTasl> {
                                                       reloadNam = true;
                                                     });
                                                   },
-                                                  icon: const Icon(Icons.edit),
+                                                  icon: sending
+                                                      ? const SizedBox(
+                                                          height: 8,
+                                                          width: 8,
+                                                          child:
+                                                              CircularProgressIndicator())
+                                                      : const Icon(Icons.edit),
                                                   label: texter('user'),
                                                 )
                                               : Container(),
@@ -271,7 +286,7 @@ class _DetailTaslState extends State<DetailTasl> {
                                 });
                               },
                             ),
-                            spacerheight(20),
+                            spacerheight(40),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -326,7 +341,7 @@ class _DetailTaslState extends State<DetailTasl> {
                                       progressColor: Colors.green,
                                       lineWidth: 8,
                                       center: texter(
-                                          '${snapshot.data!.pourcentage}%'),
+                                          '${snapshot.data!.pourcentage.toInt()}%'),
                                     );
                                   } else if (snapshot.hasError) {
                                     return texter(snapshot.error.toString());
@@ -537,7 +552,7 @@ class _DetailTaslState extends State<DetailTasl> {
               ],
             ),
             actions: list
-                .map((user) => user.fournisseur!
+                .map((user) => !user.fournisseur!
                     ? ListTile(
                         title: Text(user.name, style: styletitle),
                         subtitle: texter(user.email),
@@ -553,6 +568,7 @@ class _DetailTaslState extends State<DetailTasl> {
                                 : const SizedBox.shrink(),
                         onTap: () {
                           task.upDateUser(user.userid!);
+                          sendMail(user.email, user.name);
                           setState(() {
                             idUser = user.userid!;
                           });
@@ -621,5 +637,56 @@ class _DetailTaslState extends State<DetailTasl> {
                 .toList(),
           );
         });
+  }
+
+  sendMail(String emailString, String name) async {
+    String serviceid = "service_r2gcbji";
+    String template = "template_gtnl79j";
+    String publickey = "uTjB7xuC8AHfn3u13";
+    String privateKey = '5zYG3K0JxUxJL1N-RkNmf';
+    String url = 'https://api.emailjs.com/api/v1.0/email/send-form';
+    String message =
+        "Il vous a été attribue la tache: ${widget.task.titleTask}";
+    final Map<String, dynamic> map = {
+      "service_id": serviceid,
+      'template_id': template,
+      "user_id": publickey,
+      "template_params": {
+        'message': message,
+        "to_mail": emailString,
+        "to_name": name
+      }
+    };
+    setState(() {
+      sending = true;
+    });
+    final uri = Uri.parse(url);
+    var response = await post(uri,
+            headers: {'Content-Type': "application/json"},
+            body: json.encode(map))
+        .then((value) {
+      if (value.statusCode == 200) {
+        setState(() {
+          sending = false;
+        });
+        getSnack("L'utilisateur $name  sera notifié par mail",
+            title: 'User notification', color: Colors.green);
+      } else {
+        setState(() {
+          sending = false;
+        });
+        getSnack("Echeck d'envoie du mail",
+            title:
+                "Erreur suvenus l'or de l'envoi du mail code: ${value.statusCode} ");
+        print(value.body);
+      }
+    });
+
+    // final Email email = Email(
+    //     subject: "Attribution des taches à DERI",
+    //     body: 'on vous a attribué une tache',
+    //     isHTML: false,
+    //     recipients: [emailString]);
+    // await FlutterEmailSender.send(email);
   }
 }

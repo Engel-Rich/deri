@@ -65,22 +65,21 @@ class _AddTaskState extends State<AddTask> {
                   height: 15.0,
                 ),
                 DateTimePicker(
-                  controller: _controllerdate,
-                  validator: (value) {
-                    return value!.trim().isEmpty ? "date required" : null;
-                  },
-                  type: DateTimePickerType.date,
-                  icon: const Icon(
-                    Icons.watch_later_sharp,
-                  ),
-                  dateLabelText: DateFormat.yMEd().format(DateTime.now()),
-                  dateHintText: "Date of limit",
-                  timeLabelText: "Hour",
-                  style: styletext,
-                  timeHintText: DateFormat.Hms().format(DateTime.now()),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2100),
-                ),
+                    controller: _controllerdate,
+                    validator: (value) {
+                      return value!.trim().isEmpty ? "date required" : null;
+                    },
+                    type: DateTimePickerType.date,
+                    icon: const Icon(
+                      Icons.watch_later_sharp,
+                    ),
+                    dateLabelText: DateFormat.yMEd().format(DateTime.now()),
+                    dateHintText: "Date of limit",
+                    timeLabelText: "Hour",
+                    style: styletext,
+                    timeHintText: DateFormat.Hms().format(DateTime.now()),
+                    firstDate: DateTime.now(),
+                    lastDate: widget.projet.dateFin),
                 const SizedBox(
                   height: 20.0,
                 ),
