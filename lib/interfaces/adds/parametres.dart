@@ -41,15 +41,15 @@ class _ParametreState extends State<Parametre> {
         builder: (context, snapshot) {
           return (!snapshot.hasError && snapshot.hasData)
               ? Scaffold(
-                  appBar: AppBar(
-                    title: Text("Settings", style: styletitle),
-                    centerTitle: true,
-                    leading: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(Icons.arrow_back_ios)),
-                  ),
+                  // appBar: AppBar(
+                  //   title: Text("Settings", style: styletitle),
+                  //   centerTitle: true,
+                  //   leading: IconButton(
+                  //       onPressed: () {
+                  //         Navigator.of(context).pop();
+                  //       },
+                  //       icon: const Icon(Icons.arrow_back_ios)),
+                  // ),
                   body: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Padding(

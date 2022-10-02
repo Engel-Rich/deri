@@ -366,7 +366,7 @@ class _ProjetAddState extends State<ProjetAdd> {
                           setState(() {
                             idProjet = DateTime.now().microsecondsSinceEpoch;
                           });
-                          print(idProjet);
+                          // print(idProjet);
                           if (_fromkey.currentState!.validate()) {
                             setState(() {
                               loading = true;
@@ -388,9 +388,9 @@ class _ProjetAddState extends State<ProjetAdd> {
                                 dateDebut:
                                     DateTime.parse(dateDebutController.text),
                                 dateFin: DateTime.parse(dateFinController.text),
-                                estimationBudget:
-                                    int.parse(estimationController.text),
-                                statuProjet: status[0],
+                                // estimationBudget:
+                                //     int.parse(estimationController.text),
+                                // statuProjet: status[0],
                               );
                               projet.voir();
                               try {

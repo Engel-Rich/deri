@@ -13,7 +13,7 @@ class Projet {
   final String descriptionProjet;
   final DateTime dateDebut;
   final DateTime dateFin;
-  final int estimationBudget;
+  // final int estimationBudget;
   final double pourcentage;
   String fornisseurFont;
   String? images;
@@ -24,8 +24,8 @@ class Projet {
     required this.descriptionProjet,
     required this.dateDebut,
     required this.dateFin,
-    required this.estimationBudget,
-    required this.statuProjet,
+    // required this.estimationBudget,
+    // required this.statuProjet,
     required this.fornisseurFont,
     this.images,
     this.pourcentage = 0.0,
@@ -37,8 +37,8 @@ class Projet {
         descriptionProjet: map['descriptionProjet'],
         dateDebut: (map['dateDebut'] as Timestamp).toDate(),
         dateFin: (map['dateFin'] as Timestamp).toDate(),
-        estimationBudget: map['estimationBudget'],
-        statuProjet: map['statuProjet'],
+        // estimationBudget: map['estimationBudget'],
+        // statuProjet: map['statuProjet'],
         images: map['images'],
         pourcentage: map['pourcentage'],
         fornisseurFont: map['fornisseurFont'],
@@ -49,8 +49,7 @@ class Projet {
   titre Projet : $titreProjet,
   descriptionProjet : $descriptionProjet,
   dateDebut : $dateDebut,
-  dateFin : $dateFin,
-  estimation : $estimationBudget,
+  dateFin : $dateFin,  
   "statuProjet" : $statuProjet
   images : $images
   fornisseurFont: $fornisseurFont
@@ -63,11 +62,11 @@ class Projet {
         'descriptionProjet': descriptionProjet,
         "dateDebut": dateDebut,
         'dateFin': dateFin,
-        'estimationBudget': estimationBudget,
+        // 'estimationBudget': estimationBudget,
         'statuProjet': statuProjet,
         "images": images,
         'pourcentage': pourcentage,
-        "fornisseurFont": fornisseurFont
+        // "fornisseurFont": fornisseurFont
       };
   // Future<void> save() async {
   //   final connection = await DatabaseOnline.instance.connection();
@@ -104,13 +103,13 @@ class Projet {
     }
   }
 
-  static Stream<List<Projet>> get projetsfournisseur => projetCollections
-      .where("fornisseurFont",
-          isEqualTo: authentication.currentUser!.displayName)
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((projet) => Projet.fromMap(projet.data()))
-          .toList());
+  // static Stream<List<Projet>> get projetsfournisseur => projetCollections
+  //     .where("fornisseurFont",
+  //         isEqualTo: authentication.currentUser!.displayName)
+  //     .snapshots()
+  //     .map((snapshot) => snapshot.docs
+  //         .map((projet) => Projet.fromMap(projet.data()))
+  //         .toList());
   static Stream<Projet> oneProjet(String puid) => projetCollections
       .doc(puid)
       .snapshots()

@@ -1,5 +1,5 @@
 import 'package:deri/interfaces/View/detailprojet.dart';
-import 'package:deri/interfaces/adds/addprojet.dart';
+// import 'package:deri/interfaces/adds/addprojet.dart';
 import 'package:deri/models/projet.dart';
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
@@ -42,29 +42,29 @@ class _ProjetUiFournisseurState extends State<ProjetUiFournisseur>
           vertical: 25,
         ),
         child: StreamBuilder<List<Projet>>(
-            stream: Projet.projetsfournisseur,
+            // stream: Projet.projetsfournisseur,
             builder: (context, snapshot) {
-              final listProjet = snapshot.data;
+          final listProjet = snapshot.data;
 
-              return (snapshot.hasData && snapshot.data!.isEmpty)
-                  ? Center(
-                      child: Text("Aucun Projet enrégistré ", style: styletext))
-                  : (snapshot.hasData && snapshot.data!.isNotEmpty)
-                      ? ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return expension(listProjet![index], context);
-                          },
-                          itemCount: snapshot.data!.length,
+          return (snapshot.hasData && snapshot.data!.isEmpty)
+              ? Center(
+                  child: Text("Aucun Projet enrégistré ", style: styletext))
+              : (snapshot.hasData && snapshot.data!.isNotEmpty)
+                  ? ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return expension(listProjet![index], context);
+                      },
+                      itemCount: snapshot.data!.length,
+                    )
+                  : snapshot.hasError
+                      ? Center(
+                          child: Text(snapshot.error.toString()),
                         )
-                      : snapshot.hasError
-                          ? Center(
-                              child: Text(snapshot.error.toString()),
-                            )
-                          : Center(
-                              child: spinkit(context),
-                            );
-            }),
+                      : Center(
+                          child: spinkit(context),
+                        );
+        }),
       ),
       // floatingActionButton: FloatingActionButton.extended(
       //   label: Text(

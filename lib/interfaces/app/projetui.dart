@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:deri/interfaces/View/detailprojet.dart';
 import 'package:deri/interfaces/adds/addprojet.dart';
 import 'package:deri/models/projet.dart';
@@ -53,7 +54,7 @@ class _ProjetUiState extends State<ProjetUi>
                       ? ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return expension(listProjet![index], context);
+                            return expensionF(listProjet![index], context);
                           },
                           // separatorBuilder: (context, index) {
                           //   return const Divider(
@@ -92,6 +93,124 @@ class _ProjetUiState extends State<ProjetUi>
       ),
     );
   }
+}
+
+Widget expensionF(Projet projet, BuildContext context) {
+  return InkWell(
+    onTap: () => Navigator.of(context).push(PageTransition(
+        child: DetailProjet(project: projet),
+        type: PageTransitionType.leftToRight)),
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      height: 150,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: const Color.fromRGBO(6, 57, 112, 0.80),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.blue.shade400,
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: const Offset(1, 1))
+          ]),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "${projet.pourcentage.toStringAsFixed(2)} % ",
+                style: styletext.copyWith(
+                    fontWeight: FontWeight.w600, color: Colors.white),
+              ),
+              SizedBox(
+                width: 70,
+                child: LinearPercentIndicator(
+                  percent: projet.pourcentage / 100,
+                  progressColor: Colors.green,
+                  backgroundColor: Colors.blue.shade50,
+                ),
+              ),
+              IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.arrow_circle_right,
+                    size: 24,
+                    color: Colors.white,
+                  ))
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                  flex: 4,
+                  child: Text(
+                    projet.titreProjet,
+                    style: styletitle.copyWith(color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  )),
+              Flexible(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.blueGrey[50]),
+                  height: 55,
+                  width: 55,
+                  child:
+                      (projet.images == null || projet.images!.trim().isEmpty)
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.asset(
+                                "assets/logo.png",
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: projet.images!.isEmpty
+                                  ? SpinKitSpinningLines(
+                                      // controller: _controller,
+                                      color: Colors.blueGrey.shade300)
+                                  : CachedNetworkImage(
+                                      imageUrl: projet.images!,
+                                      placeholder: (context, text) => Center(
+                                        child: SpinKitSpinningLines(
+                                            // controller: _controller,
+                                            color: Colors.red.shade400),
+                                      ),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                            ),
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                "détails",
+                style: styletext.copyWith(
+                    fontWeight: FontWeight.w500, color: Colors.white),
+              ),
+              const Icon(
+                Icons.forward,
+                color: Colors.white,
+                size: 15,
+              )
+            ],
+          )
+        ],
+      ),
+    ),
+  );
 }
 
 Widget expension(Projet projet, BuildContext context) {

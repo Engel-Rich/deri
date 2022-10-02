@@ -1,5 +1,6 @@
 import 'package:deri/Firebases/firebaseusers.dart';
 import 'package:deri/interfaces/View/newapplication.dart';
+import 'package:deri/interfaces/View/usertask.dart';
 
 import 'package:deri/interfaces/adds/agendagood.dart';
 import 'package:deri/interfaces/adds/parametres.dart';
@@ -16,6 +17,7 @@ import 'package:deri/services/notification.dart';
 
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
 import '../../services/Theme_services.dart';
@@ -32,9 +34,11 @@ class _ApplicationState extends State<Application> {
   int? selectedindex;
   UserApp? userApp;
   List uiList = <Widget>[
-    const DepenseUi(),
     const ProjetUi(),
+    const DepenseUi(),
+    const UserTaskPage(),
     const AgendaGood(),
+    const Parametre()
   ];
   void listenNotification() =>
       NotificationApi.onNotifications.stream.listen((event) {
@@ -60,29 +64,47 @@ class _ApplicationState extends State<Application> {
             return Scaffold(
               bottomNavigationBar: taille(context).width < 640
                   ? !snapshot.data!.fournisseur!
-                      ? BottomNavigationBar(
-                          showSelectedLabels: false,
-                          elevation: 0.0,
-                          currentIndex: selectedindex!,
-                          onTap: (index) {
-                            setState(() {
-                              selectedindex = index;
-                            });
-                          },
-                          items: const [
-                            BottomNavigationBarItem(
-                              icon: Icon(Icons.money),
-                              label: 'depenses',
-                            ),
-                            BottomNavigationBarItem(
-                              icon: Icon(Icons.business),
-                              label: 'Project',
-                            ),
-                            BottomNavigationBarItem(
-                              icon: Icon(Icons.view_agenda),
-                              label: 'Agenda',
-                            ),
-                          ],
+                      ? NavigationBarTheme(
+                          data: NavigationBarThemeData(
+                              indicatorColor: Colors.blue.shade200,
+                              labelTextStyle:
+                                  MaterialStateProperty.all(styletext)),
+                          child: NavigationBar(
+                            animationDuration: const Duration(seconds: 2),
+                            labelBehavior: NavigationDestinationLabelBehavior
+                                .onlyShowSelected,
+                            height: 30,
+                            selectedIndex: selectedindex!,
+                            onDestinationSelected: (index) =>
+                                setState(() => selectedindex = index),
+                            destinations: const [
+                              NavigationDestination(
+                                icon: Icon(Icons.business_center_outlined),
+                                selectedIcon: Icon(Icons.business_center_sharp),
+                                label: ' ',
+                              ),
+                              NavigationDestination(
+                                icon: Icon(Icons.monetization_on_outlined),
+                                selectedIcon: Icon(Icons.monetization_on),
+                                label: ' ',
+                              ),
+                              NavigationDestination(
+                                icon: Icon(Icons.person_outline),
+                                selectedIcon: Icon(Icons.person),
+                                label: ' ',
+                              ),
+                              NavigationDestination(
+                                icon: Icon(Icons.calendar_month_outlined),
+                                selectedIcon: Icon(Icons.calendar_today),
+                                label: ' ',
+                              ),
+                              NavigationDestination(
+                                icon: Icon(Icons.settings_outlined),
+                                selectedIcon: Icon(Icons.settings),
+                                label: ' ',
+                              ),
+                            ],
+                          ),
                         )
                       : null
                   : null,
@@ -108,19 +130,19 @@ class _ApplicationState extends State<Application> {
                         Icons.logout,
                         size: taille(context).width > 640 ? 30 : 24,
                       )),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Parametre(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.settings_sharp,
-                        size: taille(context).width > 640 ? 30 : 24,
-                      )),
+                  // IconButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => const Parametre(),
+                  //         ),
+                  //       );
+                  //     },
+                  //     icon: Icon(
+                  //       Icons.settings_sharp,
+                  //       size: taille(context).width > 640 ? 30 : 24,
+                  //     )),
                   IconButton(
                     onPressed: () {
                       ThemeServices().changeTheme();

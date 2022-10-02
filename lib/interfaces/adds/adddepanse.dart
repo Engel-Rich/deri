@@ -44,8 +44,8 @@ class _DepenseAddState extends State<DepenseAdd> {
       descriptionProjet: "",
       dateDebut: DateTime.now(),
       dateFin: DateTime.now(),
-      estimationBudget: 0,
-      statuProjet: "",
+      // estimationBudget: 0,
+      // statuProjet: "",
       fornisseurFont: "");
 
   @override

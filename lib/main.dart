@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:deri/firebase_options.dart';
 import 'package:deri/interfaces/app/application.dart';
 import 'package:deri/interfaces/app/authuser.dart';
 import 'package:deri/interfaces/app/theme.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
 
 import 'package:get_storage/get_storage.dart';
@@ -17,9 +19,13 @@ import 'package:get_storage/get_storage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(DeriAfrica());
-  const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+  const style = SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    systemNavigationBarColor: Colors.transparent,
+  );
+  SystemChrome.setSystemUIOverlayStyle(style);
 }
 
 class DeriAfrica extends StatelessWidget {

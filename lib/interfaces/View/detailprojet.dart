@@ -11,6 +11,8 @@ import 'package:deri/models/task.dart';
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:get/get.dart';
+
 // import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -67,100 +69,79 @@ class _DetailProjetState extends State<DetailProjet> {
           return (!snapuser.hasError && snapuser.hasData)
               ? Scaffold(
                   appBar: AppBar(
-                    backgroundColor: Colors.blueGrey.shade300,
-                    title: Text(
-                      widget.project.titreProjet,
-                      style: styletext.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    // actions: [
-                    //   Center(
-                    //     child: IconButton(
-                    //       hoverColor: Colors.blueGrey.shade400,
-                    //       color: Colors.blueGrey,
-                    //       onPressed: () {
-                    //         Task.tasks(widget.project.idProjet);
-                    //         setState(() {});
-                    //       },
-                    //       icon: const Icon(
-                    //         Icons.refresh,
-                    //         size: 30,
-                    //       ),
-                    //     ),
-                    //   )
-                    // ],
-                    // leading: IconButton(
-                    //   icon: const Icon(Icons.close, color: Colors.blue),
-                    //   iconSize: 25,
-                    //   onPressed: () {
-                    //     Navigator.pop(context);
-                    //   },
-                    // ),
+                    backgroundColor:
+                        Get.isDarkMode ? Colors.black : Colors.white,
                     elevation: 0.0,
+                    leading: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(Icons.arrow_back,
+                          size: 30,
+                          color: Get.isDarkMode ? Colors.white : Colors.black),
+                    ),
                   ),
                   body: Padding(
                     padding: EdgeInsets.symmetric(
-                      vertical: 20,
                       horizontal: taille(context).width < 640
-                          ? taille(context).width * 0.040
+                          ? taille(context).width * 0.00
                           : taille(context).width * 0.075,
                     ),
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          Padding(
+                          Container(
+                            width: taille(context).width,
+                            height: 110,
                             padding: const EdgeInsets.all(10),
+                            color: Get.isDarkMode ? Colors.black : Colors.white,
                             child: Text(
                               widget.project.titreProjet,
-                              maxLines: 2,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: styletext.copyWith(
-                                fontWeight: FontWeight.bold,
+                                letterSpacing: 3,
+                                fontWeight: FontWeight.w500,
                                 fontSize: 20,
                               ),
                             ),
                           ),
-                          spacerheight(15),
-                          StreamBuilder<Projet>(
-                              stream: Projet.oneProjet(widget.project.idProjet),
-                              builder: (context, snapshot) {
-                                return (snapshot.hasData &&
-                                        snapshot.data!.idProjet.isNotEmpty)
-                                    ? LinearPercentIndicator(
-                                        curve: Curves.bounceInOut,
-                                        center: Text(
-                                            '${snapshot.data!.pourcentage} %',
-                                            style: styletitle),
-                                        progressColor: Colors.green,
-                                        backgroundColor: Colors.amber.shade100,
-                                        lineHeight: 25,
-                                        percent:
-                                            snapshot.data!.pourcentage / 100,
-                                      )
-                                    : snapshot.hasError
-                                        ? texter(snapshot.error.toString())
-                                        : const CircularProgressIndicator();
-                              }),
+                          // spacerheight(15),
+                          // StreamBuilder<Projet>(
+                          //     stream: Projet.oneProjet(widget.project.idProjet),
+                          //     builder: (context, snapshot) {
+                          //       return (snapshot.hasData &&
+                          //               snapshot.data!.idProjet.isNotEmpty)
+                          //           ? LinearPercentIndicator(
+                          //               curve: Curves.bounceInOut,
+                          //               center: Text(
+                          //                   '${snapshot.data!.pourcentage} %',
+                          //                   style: styletitle),
+                          //               progressColor: Colors.green,
+                          //               backgroundColor: Colors.amber.shade100,
+                          //               lineHeight: 25,
+                          //               percent:
+                          //                   snapshot.data!.pourcentage / 100,
+                          //             )
+                          //           : snapshot.hasError
+                          //               ? texter(snapshot.error.toString())
+                          //               : const CircularProgressIndicator();
+                          //     }),
 
-                          // trait,
-                          spacerheight(15),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  "Description Of Projet",
-                                  style: styletext.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          // // trait,
+                          // spacerheight(15),
+                          // Row(
+                          //   children: [
+                          //     Padding(
+                          //       padding: const EdgeInsets.all(10),
+                          //       child: Text(
+                          //         "Description Of Projet",
+                          //         style: styletext.copyWith(
+                          //           fontWeight: FontWeight.bold,
+                          //           fontSize: 20,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
 
                           // Row(
                           //   children: [

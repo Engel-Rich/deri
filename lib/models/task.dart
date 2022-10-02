@@ -25,7 +25,11 @@ class Task {
     this.importance = 1,
     this.pourcentage = 0.0,
   });
+  usersColletion() => taskCollection(idProjetPere.toString())
+      .doc(idTask.toString())
+      .collection('Users');
 
+  // set Projet progresse Val
   static setProjectVal(idProjetPere) async {
     int taille = 0;
     final projet = projetCollections.doc(idProjetPere.toString());
@@ -205,6 +209,7 @@ class SousTask {
   String taskid;
   String idProjet;
   double pourcentage;
+  final String? userRepo;
   final String statut;
   SousTask({
     required this.importance,
@@ -212,6 +217,7 @@ class SousTask {
     required this.id,
     required this.taskid,
     required this.idProjet,
+    this.userRepo,
     this.pourcentage = 0.0,
     this.statut = "waitting",
   });
@@ -223,16 +229,19 @@ class SousTask {
         'taskid': taskid,
         "idProjet": idProjet,
         "pourcentage": pourcentage,
-        'statut': statut
+        'statut': statut,
+        'user': userRepo
       };
   factory SousTask.fromMap(Map<String, dynamic> map) => SousTask(
-      idProjet: map['idProjet'],
-      taskid: map['taskid'],
-      importance: map['importance'],
-      titre: map['titre'],
-      id: map['id'],
-      pourcentage: map['pourcentage'],
-      statut: map['statut']);
+        idProjet: map['idProjet'],
+        taskid: map['taskid'],
+        importance: map['importance'],
+        titre: map['titre'],
+        id: map['id'],
+        pourcentage: map['pourcentage'],
+        userRepo: map['user'],
+        statut: map['statut'],
+      );
 
   save() async {
     int taille = 0;
