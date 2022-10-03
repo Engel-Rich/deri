@@ -21,7 +21,9 @@ TextStyle styletitle = styletext.copyWith(
 );
 Widget texter(String text) => Text(text, style: styletext);
 
-bool estGrand(BuildContext context) => taille(context).width > 640;
+bool estGrand(BuildContext context) =>
+    taille(context).width > 640 && taille(context).width < 848;
+bool estPlusGrand(BuildContext context) => taille(context).width > 848;
 
 Widget spacervertical(double taille) => SizedBox(height: taille);
 

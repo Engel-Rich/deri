@@ -36,7 +36,7 @@ class _ApplicationState extends State<Application> {
   List uiList = <Widget>[
     const ProjetUi(),
     const DepenseUi(),
-    const UserTaskPage(),
+    // const UserTaskPage(),
     const AgendaGood(),
     const Parametre()
   ];
@@ -73,7 +73,7 @@ class _ApplicationState extends State<Application> {
                             animationDuration: const Duration(seconds: 2),
                             labelBehavior: NavigationDestinationLabelBehavior
                                 .onlyShowSelected,
-                            height: 30,
+                            height: 60,
                             selectedIndex: selectedindex!,
                             onDestinationSelected: (index) =>
                                 setState(() => selectedindex = index),
@@ -81,27 +81,27 @@ class _ApplicationState extends State<Application> {
                               NavigationDestination(
                                 icon: Icon(Icons.business_center_outlined),
                                 selectedIcon: Icon(Icons.business_center_sharp),
-                                label: ' ',
+                                label: 'Projects',
                               ),
                               NavigationDestination(
                                 icon: Icon(Icons.monetization_on_outlined),
                                 selectedIcon: Icon(Icons.monetization_on),
-                                label: ' ',
+                                label: 'Finances',
                               ),
-                              NavigationDestination(
-                                icon: Icon(Icons.person_outline),
-                                selectedIcon: Icon(Icons.person),
-                                label: ' ',
-                              ),
+                              // NavigationDestination(
+                              //   icon: Icon(Icons.person_outline),
+                              //   selectedIcon: Icon(Icons.person),
+                              //   label: ' ',
+                              // ),
                               NavigationDestination(
                                 icon: Icon(Icons.calendar_month_outlined),
                                 selectedIcon: Icon(Icons.calendar_today),
-                                label: ' ',
+                                label: 'Agenda',
                               ),
                               NavigationDestination(
                                 icon: Icon(Icons.settings_outlined),
                                 selectedIcon: Icon(Icons.settings),
-                                label: ' ',
+                                label: 'Settings',
                               ),
                             ],
                           ),

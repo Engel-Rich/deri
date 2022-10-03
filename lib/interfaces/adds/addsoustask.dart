@@ -1,9 +1,9 @@
-import 'package:date_time_picker/date_time_picker.dart';
+// import 'package:date_time_picker/date_time_picker.dart';
 import 'package:deri/models/task.dart';
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:path/path.dart';
+// import 'package:intl/intl.dart';
+// import 'package:path/path.dart';
 
 class AddSouTask extends StatefulWidget {
   final Task task;
@@ -123,6 +123,8 @@ class _AddSouTaskState extends State<AddSouTask> {
                     onPressed: () {
                       if (_formkey.currentState!.validate()) {
                         final soustask = SousTask(
+                          limite: DateTime.now(),
+                          userRespo: authentication.currentUser!.uid,
                           id: DateTime.now().microsecondsSinceEpoch.toString(),
                           idProjet: widget.task.idProjetPere.toString(),
                           importance: poid,

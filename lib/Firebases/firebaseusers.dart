@@ -81,7 +81,7 @@ class UserApp {
         name: map['name'],
         email: map['email'],
         userid: map['userid'],
-        profile: map['profile'],
+        profile: map['profile'] ?? " ",
         fournisseur: map['fournisseur'] ?? false,
         isadmin: map["isadmin"] ?? false,
       );
@@ -102,10 +102,10 @@ class UserApp {
   }
 
   static Stream<UserApp> getOneUserStream(idUser) {
-    final onUser = userCollection
-        .doc(idUser)
-        .snapshots()
-        .map((event) => UserApp.fromMap(event.data()!));
+    final onUser = userCollection.doc(idUser).snapshots().map((event) {
+      print("Recupération :${event.data()}");
+      return UserApp.fromMap(event.data()!);
+    });
     return onUser;
   }
 

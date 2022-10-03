@@ -40,7 +40,7 @@ class Projet {
         // estimationBudget: map['estimationBudget'],
         // statuProjet: map['statuProjet'],
         images: map['images'],
-        pourcentage: map['pourcentage'],
+        pourcentage: map['pourcentage'].toDouble(),
         fornisseurFont: map['fornisseurFont'],
       );
   void voir() {

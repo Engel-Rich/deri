@@ -97,7 +97,7 @@ class _AddTaskState extends State<AddTask> {
                           titleTask: _controllertitle.text,
                           limiteTask: DateTime.parse(_controllerdate.text),
                           statusTask: status[0]!,
-                          userId: " ",
+                          userId: authentication.currentUser!.uid,
                         );
                         try {
                           task.saveTask();

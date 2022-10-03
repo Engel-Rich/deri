@@ -36,181 +36,277 @@ class _ProjetUiState extends State<ProjetUi>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: taille(context).width < 640
-              ? taille(context).width * 0.020
-              : taille(context).width * 0.075,
-          vertical: 25,
-        ),
-        child: StreamBuilder<List<Projet>>(
-            stream: Projet.projets,
-            builder: (context, snapshot) {
-              final listProjet = snapshot.data;
+          padding: EdgeInsets.symmetric(
+            horizontal: taille(context).width < 640
+                ? taille(context).width * 0.020
+                : estPlusGrand(context)
+                    ? 5
+                    : taille(context).width * 0.075,
+            vertical: 25,
+          ),
+          child: estPlusGrand(context)
+              ? SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(child: projetListView()),
+                      const VerticalDivider(
+                          thickness: 4,
+                          color: Color.fromRGBO(6, 57, 112, 0.80)),
+                      Flexible(
+                          child: projetSelected != null
+                              ? DetailProjet(project: projetSelected!)
+                              : ajout
+                                  ? const ProjetAdd(idProjetPere: '')
+                                  : Center(
+                                      child: texter(
+                                          "Select A project for more details"),
+                                    ))
+                    ],
+                  ),
+                )
+              : projetListView()),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   label: Text(
+      //     "Add Project",
+      //     style: styletext.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+      //   ),
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       PageTransition(
+      //         child: const ProjetAdd(
+      //           idProjetPere: '',
+      //         ),
+      //         type: PageTransitionType.bottomToTop,
+      //       ),
+      //     );
+      //   },
+      //   icon: const Icon(Icons.business_center),
+      // ),
+    );
+  }
 
-              return (snapshot.hasData && snapshot.data!.isEmpty)
-                  ? Center(
-                      child: Text("Aucun Projet enrégistré ", style: styletext))
-                  : (snapshot.hasData && snapshot.data!.isNotEmpty)
-                      ? ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return expensionF(listProjet![index], context);
-                          },
-                          // separatorBuilder: (context, index) {
-                          //   return const Divider(
-                          //     height: 2.0,
-                          //     thickness: 1.0,
-                          //   );
-                          // },
-                          itemCount: snapshot.data!.length,
-                        )
-                      : snapshot.hasError
-                          ? Center(
-                              child: Text(snapshot.error.toString()),
-                            )
-                          : Center(
-                              child: spinkit(context),
-                            );
-            }),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text(
-          "Add Project",
-          style: styletext.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            PageTransition(
-              child: const ProjetAdd(
-                idProjetPere: '',
-              ),
-              type: PageTransitionType.bottomToTop,
+  bool ajout = false;
+  Widget expensionF(Projet projet, BuildContext context) {
+    return InkWell(
+      onTap: () {
+        if (estPlusGrand(context)) {
+          setState(() {
+            projetSelected = projet;
+            ajout = false;
+          });
+        } else {
+          Navigator.of(context).push(PageTransition(
+              child: DetailProjet(project: projet),
+              type: PageTransitionType.leftToRight));
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        height: 150,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+            color: const Color.fromRGBO(6, 57, 112, 0.80),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.blue.shade400,
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(1, 1))
+            ]),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${projet.pourcentage.toStringAsFixed(2)} % ",
+                  style: styletext.copyWith(
+                      fontWeight: FontWeight.w600, color: Colors.white),
+                ),
+                SizedBox(
+                  width: 70,
+                  child: LinearPercentIndicator(
+                    percent: projet.pourcentage / 100,
+                    progressColor: Colors.green,
+                    backgroundColor: Colors.blue.shade50,
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.arrow_circle_right,
+                      size: 24,
+                      color: Colors.white,
+                    ))
+              ],
             ),
-          );
-        },
-        icon: const Icon(Icons.business_center),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                    flex: 4,
+                    child: Text(
+                      projet.titreProjet,
+                      style: styletitle.copyWith(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    )),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.blueGrey[50]),
+                    height: 55,
+                    width: 55,
+                    child: (projet.images == null ||
+                            projet.images!.trim().isEmpty)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.asset(
+                              "assets/logo.png",
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: projet.images!.isEmpty
+                                ? SpinKitSpinningLines(
+                                    // controller: _controller,
+                                    color: Colors.blueGrey.shade300)
+                                : CachedNetworkImage(
+                                    imageUrl: projet.images!,
+                                    placeholder: (context, text) =>
+                                        const Center(
+                                      child: SpinKitSpinningLines(
+                                          // controller: _controller,
+                                          color:
+                                              Color.fromRGBO(6, 57, 112, 0.80)),
+                                    ),
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                  ),
+                          ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "détails",
+                  style: styletext.copyWith(
+                      fontWeight: FontWeight.w500, color: Colors.white),
+                ),
+                const Icon(
+                  Icons.forward,
+                  color: Colors.white,
+                  size: 15,
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
-}
 
-Widget expensionF(Projet projet, BuildContext context) {
-  return InkWell(
-    onTap: () => Navigator.of(context).push(PageTransition(
-        child: DetailProjet(project: projet),
-        type: PageTransitionType.leftToRight)),
-    child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      height: 150,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          color: const Color.fromRGBO(6, 57, 112, 0.80),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.blue.shade400,
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(1, 1))
-          ]),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${projet.pourcentage.toStringAsFixed(2)} % ",
-                style: styletext.copyWith(
-                    fontWeight: FontWeight.w600, color: Colors.white),
+  Projet? projetSelected;
+  Widget projetListView() => SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade200,
+                borderRadius: BorderRadius.circular(10),
               ),
-              SizedBox(
-                width: 70,
-                child: LinearPercentIndicator(
-                  percent: projet.pourcentage / 100,
-                  progressColor: Colors.green,
-                  backgroundColor: Colors.blue.shade50,
+              child: ListTile(
+                onTap: () {
+                  if (estPlusGrand(context)) {
+                    setState(() {
+                      projetSelected = null;
+                      ajout = true;
+                    });
+                  } else {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: const ProjetAdd(
+                          idProjetPere: '',
+                        ),
+                        type: PageTransitionType.bottomToTop,
+                      ),
+                    );
+                  }
+                },
+                title: Text(
+                  'Create new Project',
+                  style: styletitle.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 3,
+                  ),
                 ),
-              ),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.arrow_circle_right,
-                    size: 24,
-                    color: Colors.white,
-                  ))
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                  flex: 4,
-                  child: Text(
-                    projet.titreProjet,
-                    style: styletitle.copyWith(color: Colors.white),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  )),
-              Flexible(
-                flex: 2,
-                child: Container(
+                trailing: Container(
+                  height: 50,
+                  width: 50,
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.blueGrey[50]),
-                  height: 55,
-                  width: 55,
-                  child:
-                      (projet.images == null || projet.images!.trim().isEmpty)
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                "assets/logo.png",
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: projet.images!.isEmpty
-                                  ? SpinKitSpinningLines(
-                                      // controller: _controller,
-                                      color: Colors.blueGrey.shade300)
-                                  : CachedNetworkImage(
-                                      imageUrl: projet.images!,
-                                      placeholder: (context, text) => Center(
-                                        child: SpinKitSpinningLines(
-                                            // controller: _controller,
-                                            color: Colors.red.shade400),
-                                      ),
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                    ),
-                            ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: const Icon(
+                    Icons.add_rounded,
+                    size: 35,
+                    color: Color.fromRGBO(6, 57, 112, 0.80),
+                  ),
                 ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                "détails",
-                style: styletext.copyWith(
-                    fontWeight: FontWeight.w500, color: Colors.white),
+                subtitle: texter("create a new project here"),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side:
+                      const BorderSide(color: Color.fromRGBO(6, 57, 112, 0.80)),
+                ),
               ),
-              const Icon(
-                Icons.forward,
-                color: Colors.white,
-                size: 15,
-              )
-            ],
-          )
-        ],
-      ),
-    ),
-  );
+            ),
+            StreamBuilder<List<Projet>>(
+                stream: Projet.projets,
+                builder: (context, snapshot) {
+                  final listProjet = snapshot.data;
+
+                  return (snapshot.hasData && snapshot.data!.isEmpty)
+                      ? Center(
+                          child: Text("Aucun Projet enrégistré ",
+                              style: styletext))
+                      : (snapshot.hasData && snapshot.data!.isNotEmpty)
+                          ? ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return expensionF(listProjet![index], context);
+                              },
+                              itemCount: snapshot.data!.length,
+                            )
+                          : snapshot.hasError
+                              ? Center(
+                                  child: Text(snapshot.error.toString()),
+                                )
+                              : Center(
+                                  child: spinkit(context),
+                                );
+                }),
+          ],
+        ),
+      );
+
+  // end stateFull
 }
 
 Widget expension(Projet projet, BuildContext context) {

@@ -37,18 +37,20 @@ class _ProjetAddState extends State<ProjetAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.close),
-        ),
-        title: Text(
-          'Ajouter un projet',
-          style: styletext,
-        ),
-      ),
+      appBar: estPlusGrand(context)
+          ? null
+          : AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.close),
+              ),
+              title: Text(
+                'Ajouter un projet',
+                style: styletext,
+              ),
+            ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -143,37 +145,37 @@ class _ProjetAddState extends State<ProjetAdd> {
 
                   // textForField for auther estimation financière du projet,
 
-                  Padding(
-                    padding: EdgeInsets.only(top: paddingTop),
-                    child: TextFormField(
-                      controller: estimationController,
-                      validator: (value) {
-                        return value!.trim().isEmpty
-                            ? "entrer une estimation du projet"
-                            : null;
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      decoration: InputDecoration(
-                        hintText: "estimation financière",
-                        hintStyle: styletext,
-                        icon: const CircleAvatar(
-                          child: Icon(
-                            Icons.monetization_on,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            width: 1,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(top: paddingTop),
+                  //   child: TextFormField(
+                  //     controller: estimationController,
+                  //     validator: (value) {
+                  //       return value!.trim().isEmpty
+                  //           ? "entrer une estimation du projet"
+                  //           : null;
+                  //     },
+                  //     keyboardType: TextInputType.number,
+                  //     inputFormatters: <TextInputFormatter>[
+                  //       FilteringTextInputFormatter.digitsOnly,
+                  //     ],
+                  //     decoration: InputDecoration(
+                  //       hintText: "estimation financière",
+                  //       hintStyle: styletext,
+                  //       icon: const CircleAvatar(
+                  //         child: Icon(
+                  //           Icons.monetization_on,
+                  //         ),
+                  //       ),
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         borderSide: const BorderSide(
+                  //           width: 1,
+                  //           style: BorderStyle.solid,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
 
                   // date du commencement du projet
 
@@ -224,7 +226,7 @@ class _ProjetAddState extends State<ProjetAdd> {
                       dateLabelText: 'Date de fin',
                       style: styletext,
                       timeHintText: DateFormat.Hms().format(DateTime.now()),
-                      firstDate: DateTime.now(),
+                      firstDate: DateTime(2001),
                       lastDate: DateTime(2100),
                       onChanged: (val) {
                         print(val);
@@ -233,67 +235,67 @@ class _ProjetAddState extends State<ProjetAdd> {
                   ),
 
                   // selection du fournisseur
-                  spacerheight(10),
-                  Text(
-                    "Suplier : $fournisseur",
-                    style: styletext.copyWith(
-                        fontSize: 16,
-                        letterSpacing: 3,
-                        fontWeight: FontWeight.w800),
-                  ),
-                  StreamBuilder<List<UserApp>>(
-                      stream: UserApp.fournisseurList(),
-                      builder: (context, snapshot) {
-                        return TextButton.icon(
-                          onPressed: () {
-                            (snapshot.hasData)
-                                ? showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return SimpleDialog(
-                                        title: Text(
-                                          "Select suplier",
-                                          style: styletext.copyWith(
-                                            fontSize: 16,
-                                            letterSpacing: 3,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                        children: snapshot.data!
-                                            .map(
-                                              (e) => e.fournisseur == true
-                                                  ? Wrap(
-                                                      children: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                fournisseur =
-                                                                    e.name;
-                                                              });
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            child:
-                                                                texter(e.name)),
-                                                      ],
-                                                    )
-                                                  : Container(),
-                                            )
-                                            .toList(),
-                                      );
-                                    })
-                                : Fluttertoast.showToast(
-                                    msg: "No supliers avaibles");
-                          },
-                          icon: const Icon(Icons.support_outlined, size: 30),
-                          label: Text(
-                            "Selecd the suplier",
-                            style: styletext.copyWith(
-                                fontSize: 16, letterSpacing: 3),
-                          ),
-                        );
-                      }),
+                  // spacerheight(10),
+                  // Text(
+                  //   "Suplier : $fournisseur",
+                  //   style: styletext.copyWith(
+                  //       fontSize: 16,
+                  //       letterSpacing: 3,
+                  //       fontWeight: FontWeight.w800),
+                  // ),
+                  // StreamBuilder<List<UserApp>>(
+                  //     stream: UserApp.fournisseurList(),
+                  //     builder: (context, snapshot) {
+                  //       return TextButton.icon(
+                  //         onPressed: () {
+                  //           (snapshot.hasData)
+                  //               ? showDialog(
+                  //                   context: context,
+                  //                   builder: (context) {
+                  //                     return SimpleDialog(
+                  //                       title: Text(
+                  //                         "Select suplier",
+                  //                         style: styletext.copyWith(
+                  //                           fontSize: 16,
+                  //                           letterSpacing: 3,
+                  //                           fontWeight: FontWeight.w800,
+                  //                         ),
+                  //                       ),
+                  //                       children: snapshot.data!
+                  //                           .map(
+                  //                             (e) => e.fournisseur == true
+                  //                                 ? Wrap(
+                  //                                     children: [
+                  //                                       TextButton(
+                  //                                           onPressed: () {
+                  //                                             setState(() {
+                  //                                               fournisseur =
+                  //                                                   e.name;
+                  //                                             });
+                  //                                             Navigator.of(
+                  //                                                     context)
+                  //                                                 .pop();
+                  //                                           },
+                  //                                           child:
+                  //                                               texter(e.name)),
+                  //                                     ],
+                  //                                   )
+                  //                                 : Container(),
+                  //                           )
+                  //                           .toList(),
+                  //                     );
+                  //                   })
+                  //               : Fluttertoast.showToast(
+                  //                   msg: "No supliers avaibles");
+                  //         },
+                  //         icon: const Icon(Icons.support_outlined, size: 30),
+                  //         label: Text(
+                  //           "Selecd the suplier",
+                  //           style: styletext.copyWith(
+                  //               fontSize: 16, letterSpacing: 3),
+                  //         ),
+                  //       );
+                  //     }),
                   // StreamBuilder<List<UserApp>>(
                   //     stream: UserApp.fournisseurList(),
                   //     builder: (context, snapshot) {
@@ -375,8 +377,8 @@ class _ProjetAddState extends State<ProjetAdd> {
                                 DateTime.parse(dateDebutController.text);
                             var fin = DateTime.parse(dateFinController.text);
 
-                            debugPrint(
-                                "Comparaison des dates : ${debut.compareTo(fin)}");
+                            // debugPrint(
+                            //     "Comparaison des dates : ${debut.compareTo(fin)}");
                             if (debut.compareTo(fin) < 0) {
                               final projet = Projet(
                                 fornisseurFont: fournisseur!,

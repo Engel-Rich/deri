@@ -207,9 +207,10 @@ class SousTask {
   final int importance;
   final String id;
   String taskid;
+  DateTime limite;
   String idProjet;
   double pourcentage;
-  final String? userRepo;
+  final String? userRespo;
   final String statut;
   SousTask({
     required this.importance,
@@ -217,7 +218,8 @@ class SousTask {
     required this.id,
     required this.taskid,
     required this.idProjet,
-    this.userRepo,
+    required this.limite,
+    this.userRespo,
     this.pourcentage = 0.0,
     this.statut = "waitting",
   });
@@ -230,7 +232,8 @@ class SousTask {
         "idProjet": idProjet,
         "pourcentage": pourcentage,
         'statut': statut,
-        'user': userRepo
+        'user': userRespo,
+        "limite": limite
       };
   factory SousTask.fromMap(Map<String, dynamic> map) => SousTask(
         idProjet: map['idProjet'],
@@ -239,8 +242,9 @@ class SousTask {
         titre: map['titre'],
         id: map['id'],
         pourcentage: map['pourcentage'],
-        userRepo: map['user'],
+        userRespo: map['user'],
         statut: map['statut'],
+        limite: (map['limite'] as Timestamp).toDate(),
       );
 
   save() async {
@@ -368,6 +372,44 @@ titre: $titre''');
     Task.setProjectVal(idProjet);
   }
 
+  setspourcentage(double pourcent) async {
+    voir();
+    int taille = 0;
+    await taskCollection(idProjet)
+        .doc(taskid)
+        .collection("Soustaches")
+        .doc(id)
+        .update({"pourcentage": pourcent});
+    await taskCollection(idProjet).doc(taskid).update({"pourcentage": 0.0});
+    final List<DocumentSnapshot<Map<String, dynamic>>> list =
+        await taskCollection(idProjet)
+            .doc(taskid)
+            .collection("Soustaches")
+            .get()
+            .then((value) {
+      taille = value.size;
+      return value.docs.map((elmt) {
+        return elmt;
+      }).toList();
+    });
+    for (var element in list) {
+      final val = element.data()!['pourcentage'] / taille;
+      debugPrint(val);
+
+      await taskCollection(idProjet)
+          .doc(taskid)
+          .update({"pourcentage": FieldValue.increment(val.toInt())});
+
+      taskCollection(idProjet).doc(taskid).get().then((value) async {
+        if (value.data()!['pourcentage'] == 100) {
+          await taskCollection(idProjet).doc(taskid).update({"statut": 'end'});
+        }
+      });
+    }
+    Task.setProjectVal(idProjet);
+  }
+
+  setUser() {}
   static Stream<List<SousTask>> soutask(
           {required String taskid, required String idProjet}) =>
       taskCollection(idProjet)
