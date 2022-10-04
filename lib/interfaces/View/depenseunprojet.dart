@@ -3,7 +3,7 @@ import 'package:deri/interfaces/View/pdfview.dart';
 import 'package:deri/models/projet.dart';
 import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
 class DepensesUnProjet extends StatefulWidget {
@@ -41,6 +41,7 @@ class _DepensesUnProjetState extends State<DepensesUnProjet> {
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -62,33 +63,39 @@ class _DepensesUnProjetState extends State<DepensesUnProjet> {
                         ))
                       : snapshot.hasData
                           ? snapshot.data!.isNotEmpty
-                              ? ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: ListTile(
-                                        title: Text(
-                                          data![index].motif,
-                                          style: styletitle,
-                                        ),
-                                        subtitle: Text(
-                                            DateFormat("E d MMM yyyy H:m")
-                                                .format(data[index].date),
-                                            style: styletext),
-                                        trailing: Text(
-                                          '${data[index].montant} F',
-                                          style: styletitle,
-                                        ),
-                                        style: ListTileStyle.list,
-                                        shape: const RoundedRectangleBorder(
-                                          side: BorderSide(),
-                                        ),
-                                      ),
-                                    );
-                                  })
+                              ? SizedBox(
+                                  width: double.infinity,
+                                  child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      physics: const BouncingScrollPhysics(),
+                                      child: showDepenses(snapshot.data!)))
+                              // ? ListView.builder(
+                              //     shrinkWrap: true,
+                              //     physics: const NeverScrollableScrollPhysics(),
+                              //     itemCount: snapshot.data!.length,
+                              //     itemBuilder: (context, index) {
+                              //       return Padding(
+                              //         padding: const EdgeInsets.all(8.0),
+                              //         child: ListTile(
+                              //           title: Text(
+                              //             data![index].motif,
+                              //             style: styletitle,
+                              //           ),
+                              //           subtitle: Text(
+                              //               DateFormat("E d MMM yyyy H:m")
+                              //                   .format(data[index].date),
+                              //               style: styletext),
+                              //           trailing: Text(
+                              //             '${data[index].montant} F',
+                              //             style: styletitle,
+                              //           ),
+                              //           style: ListTileStyle.list,
+                              //           shape: const RoundedRectangleBorder(
+                              //             side: BorderSide(),
+                              //           ),
+                              //         ),
+                              //       );
+                              //     })
                               : Center(
                                   child: Text(
                                     'No Datas !',

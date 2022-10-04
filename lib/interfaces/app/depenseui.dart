@@ -51,7 +51,7 @@ class _DepenseUiState extends State<DepenseUi>
       children: [
         TabBar(
           controller: controller,
-          isScrollable: true,
+          // isScrollable: true,
           labelPadding: const EdgeInsets.all(8),
           padding: const EdgeInsets.all(5),
           labelColor: Colors.blue,

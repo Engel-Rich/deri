@@ -46,6 +46,9 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   date_picker_timeline: ^1.2.3
   flutter_launcher_icons: ^0.10.0
+  http: ^0.13.5
+  data_table_2: ^2.3.7
+
 
 dev_dependencies:
   flutter_test:

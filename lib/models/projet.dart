@@ -103,13 +103,13 @@ class Projet {
     }
   }
 
-  // static Stream<List<Projet>> get projetsfournisseur => projetCollections
-  //     .where("fornisseurFont",
-  //         isEqualTo: authentication.currentUser!.displayName)
-  //     .snapshots()
-  //     .map((snapshot) => snapshot.docs
-  //         .map((projet) => Projet.fromMap(projet.data()))
-  //         .toList());
+  static Stream<List<Projet>> get projetsfournisseur => projetCollections
+      .where("fornisseurFont",
+          isEqualTo: authentication.currentUser!.displayName)
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((projet) => Projet.fromMap(projet.data()))
+          .toList());
   static Stream<Projet> oneProjet(String puid) => projetCollections
       .doc(puid)
       .snapshots()

@@ -1,6 +1,6 @@
 // ignore: file_names
 import 'package:deri/interfaces/View/detailprojet.dart';
-import 'package:deri/interfaces/adds/addprojet.dart';
+// import 'package:deri/interfaces/adds/addprojet.dart';
 import 'package:deri/models/projet.dart';
 import 'package:deri/variables.dart';
 // import 'package:flutter/gestures.dart';

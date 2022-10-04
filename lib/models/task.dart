@@ -85,6 +85,7 @@ class Task {
     await taskCollection(idProjetPere.toString())
         .doc(idTask.toString())
         .update({"userId": iduser});
+
     // final con = await DatabaseOnline.instance.connection();
     // await con.query("UPDATE Task SET userId = ? Where idTask= ? ",
     //     [iduser, idTask]).then((value) => con.close());
@@ -174,6 +175,7 @@ class Task {
     await taskCollection(idProjetPere.toString())
         .doc(idTask.toString())
         .delete();
+    setProjectVal(idProjetPere);
     // final con = await DatabaseOnline.instance.connection();
     // await con.query("DELETE FROM Task WHERE idTask = ? ", [idTask]);
     // con.close();
@@ -306,14 +308,17 @@ class SousTask {
     });
     for (var element in list) {
       final val = element.data()!['pourcentage'] / taille;
-      if (element.data()!['pourcentage'] == 100) {
-        await taskCollection(idProjet)
-            .doc(taskid)
-            .update({"pourcentage": FieldValue.increment(val)});
-      }
+      await taskCollection(idProjet)
+          .doc(taskid)
+          .update({"pourcentage": FieldValue.increment(val)});
+
       taskCollection(idProjet).doc(taskid).get().then((value) async {
         if (value.data()!['pourcentage'] == 100) {
-          await taskCollection(idProjet).doc(taskid).update({"statut": 'end'});
+          await taskCollection(idProjet).doc(taskid).get().then((value) {
+            final tks = Task.froMap(value.data()!);
+            tks.setStatut('end');
+          }); // update({"statut": 'end'});
+
         }
       });
     }
@@ -394,7 +399,7 @@ titre: $titre''');
     });
     for (var element in list) {
       final val = element.data()!['pourcentage'] / taille;
-      debugPrint(val);
+      // debugPrint(val);
 
       await taskCollection(idProjet)
           .doc(taskid)

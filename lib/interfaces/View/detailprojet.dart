@@ -15,6 +15,7 @@ import 'package:deri/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 // import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
@@ -45,10 +46,22 @@ class _DetailProjetState extends State<DetailProjet> {
     ),
   );
   var dataTask = <Task>[];
+  UserApp? userAppes;
+  getUserapp() async {
+    final use =
+        await UserApp.getOneUser(authentication.currentUser!.uid).then((user) {
+      controller.changeWiget(getlistSoustask(user));
+      setState(() {
+        userAppes = user;
+      });
+    });
+    return use;
+  }
+
   Color bleu = const Color.fromRGBO(6, 57, 112, 0.80);
   @override
   void initState() {
-    controller.changeWiget(getlistSoustask());
+    getUserapp();
     // listUser();
     super.initState();
     // listTask();
@@ -59,7 +72,7 @@ class _DetailProjetState extends State<DetailProjet> {
     return StreamBuilder<UserApp>(
         stream: UserApp.getOneUserStream(authentication.currentUser!.uid),
         builder: (context, snapuser) {
-          if ((!snapuser.hasError && snapuser.hasData)) {
+          if ((!snapuser.hasError && snapuser.hasData && userAppes != null)) {
             return Scaffold(
               backgroundColor:
                   !Get.isDarkMode ? Colors.grey[350] : Colors.grey[900],
@@ -144,7 +157,8 @@ class _DetailProjetState extends State<DetailProjet> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           buttonsSelected(() {
-                            controller.changeWiget(getlistSoustask());
+                            controller
+                                .changeWiget(getlistSoustask(snapuser.data!));
                             setState(() {
                               actuelwidget = 1;
                             });
@@ -161,7 +175,8 @@ class _DetailProjetState extends State<DetailProjet> {
                             setState(() {
                               actuelwidget = 2;
                             });
-                            controller.changeWiget(getlistSoustaskUser());
+                            controller.changeWiget(
+                                getlistSoustaskUser(snapuser.data!));
                           }, "Assigned", 2),
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -175,7 +190,8 @@ class _DetailProjetState extends State<DetailProjet> {
                             setState(() {
                               actuelwidget = 3;
                             });
-                            controller.changeWiget(getlistSoustaskEnd());
+                            controller.changeWiget(
+                                getlistSoustaskEnd(snapuser.data!));
                           }, "Completed", 3),
                         ],
                       ),
@@ -476,7 +492,7 @@ class _DetailProjetState extends State<DetailProjet> {
 
 // display one task or subtask
 
-  Widget taskView({Task? task, SousTask? sousTask}) {
+  Widget taskView({Task? task, SousTask? sousTask, required UserApp user}) {
     return StreamBuilder<UserApp>(
         stream: sousTask == null
             ? UserApp.getOneUserStream(task!.userId)
@@ -490,7 +506,7 @@ class _DetailProjetState extends State<DetailProjet> {
               //     :
               InkWell(
             onTap: () {
-              if (task != null) {
+              if (task != null && !user.fournisseur!) {
                 Navigator.of(context).push(PageTransition(
                     child: DetailTask(task: task),
                     type: PageTransitionType.fade));
@@ -520,6 +536,10 @@ class _DetailProjetState extends State<DetailProjet> {
                                   placeholder: (context, url) {
                                     return spinkit(context);
                                   },
+                                  errorWidget: (context, url, error) =>
+                                      const Center(
+                                          child: Icon(Icons.person,
+                                              size: 45, color: Colors.white)),
                                   fit: BoxFit.cover,
                                 )
                               : const Center(
@@ -531,7 +551,10 @@ class _DetailProjetState extends State<DetailProjet> {
                         sousTask == null ? task!.titleTask : sousTask.titre,
                         style: styletitle,
                       ),
-                      subtitle: Text('snapshot.data!.name',
+                      subtitle: Text(
+                          DateFormat("EE d MM y").format(sousTask != null
+                              ? sousTask.limite
+                              : task!.limiteTask),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: styletext),
@@ -575,7 +598,7 @@ class _DetailProjetState extends State<DetailProjet> {
 
 // liste des sous taches pour l'utilisateur.
 
-  soutaskList({String? iduser, bool? end}) {
+  soutaskList({String? iduser, bool? end, required UserApp user}) {
     // bool forUser = iduser != null;
     return StreamBuilder<List<Task>>(
         stream: Task.tasks(widget.project.idProjet),
@@ -594,7 +617,6 @@ class _DetailProjetState extends State<DetailProjet> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final task = snapshot.data![index];
-
               return StreamBuilder<List<SousTask>>(
                   stream: SousTask.soutask(
                       taskid: task.idTask.toString(),
@@ -603,10 +625,10 @@ class _DetailProjetState extends State<DetailProjet> {
                     if (!snapshotTask.hasData || snapshotTask.data!.isEmpty) {
                       if (end == null) {
                         if (iduser == null) {
-                          return taskView(task: task);
+                          return taskView(task: task, user: user);
                         } else {
                           if ((iduser == task.userId)) {
-                            return taskView(task: task);
+                            return taskView(task: task, user: user);
                           } else {
                             return Center(
                               child: ListTile(
@@ -623,7 +645,7 @@ class _DetailProjetState extends State<DetailProjet> {
                         }
                       } else {
                         if (task.pourcentage == 100) {
-                          return taskView(task: task);
+                          return taskView(task: task, user: user);
                         } else {
                           return const SizedBox.shrink();
                         }
@@ -679,9 +701,11 @@ class _DetailProjetState extends State<DetailProjet> {
                               ),
                               trailing: IconButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(PageTransition(
-                                      child: DetailTask(task: task),
-                                      type: PageTransitionType.fade));
+                                  if (!user.fournisseur!) {
+                                    Navigator.of(context).push(PageTransition(
+                                        child: DetailTask(task: task),
+                                        type: PageTransitionType.fade));
+                                  }
                                 },
                                 icon: const Icon(
                                   Icons.mode_edit_outline,
@@ -692,12 +716,15 @@ class _DetailProjetState extends State<DetailProjet> {
                                   snapshotTask.data!.map((SousTask sousTaski) {
                                 if (end != null &&
                                     sousTaski.pourcentage == 100) {
-                                  return taskView(sousTask: sousTaski);
+                                  return taskView(
+                                      sousTask: sousTaski, user: user);
                                 } else {
                                   return iduser == null
-                                      ? taskView(sousTask: sousTaski)
+                                      ? taskView(
+                                          sousTask: sousTaski, user: user)
                                       : (iduser.trim() == task.userId.trim())
-                                          ? taskView(sousTask: sousTaski)
+                                          ? taskView(
+                                              sousTask: sousTaski, user: user)
                                           : Center(
                                               child: Text(
                                                 "Tu n'a aucune tâche dans ce projets",
@@ -719,7 +746,7 @@ class _DetailProjetState extends State<DetailProjet> {
   }
 
 // Task for connected User.
-  taskUsers(String idUser) {
+  taskUsers(String idUser, UserApp user) {
     return StreamBuilder<List<Task>>(
         stream: Task.tasks(widget.project.idProjet),
         builder: (context, AsyncSnapshot<List<Task>> snapshot) {
@@ -756,7 +783,7 @@ class _DetailProjetState extends State<DetailProjet> {
                           itemCount: snapshotTask.data!.length,
                           itemBuilder: (context, index) {
                             if (snapshotTask.data![index].userRespo == idUser) {
-                              return taskView(task: task);
+                              return taskView(task: task, user: user);
                             } else {
                               return const SizedBox.shrink();
                             }
@@ -767,7 +794,7 @@ class _DetailProjetState extends State<DetailProjet> {
   }
 
 // task terminate
-  taskend() {
+  taskend(UserApp user) {
     return StreamBuilder<List<Task>>(
         stream: Task.tasks(widget.project.idProjet),
         builder: (context, AsyncSnapshot<List<Task>> snapshot) {
@@ -786,7 +813,7 @@ class _DetailProjetState extends State<DetailProjet> {
               itemBuilder: (context, index) {
                 final task = snapshot.data![index];
                 return task.pourcentage == 100
-                    ? taskView(task: task)
+                    ? taskView(task: task, user: user)
                     : const SizedBox.shrink();
                 // return StreamBuilder<List<SousTask>>(
                 //     stream: SousTask.soutask(
@@ -817,24 +844,24 @@ class _DetailProjetState extends State<DetailProjet> {
         });
   }
 
-  Container getlistSoustask() => Container(
+  Container getlistSoustask(UserApp user) => Container(
         padding: const EdgeInsets.all(8),
         child: Center(
-          child: soutaskList(),
+          child: soutaskList(user: user),
         ),
       );
-  Container getlistSoustaskEnd() => Container(
+  Container getlistSoustaskEnd(UserApp userApp) => Container(
         padding: const EdgeInsets.all(8),
         child: Center(
-          child: taskend(),
+          child: taskend(userApp),
         ),
       );
 
 // les taches des utilisateurs
-  Container getlistSoustaskUser() => Container(
+  Container getlistSoustaskUser(UserApp userApp) => Container(
         padding: const EdgeInsets.all(8),
         child: Center(
-          child: taskUsers(authentication.currentUser!.uid),
+          child: taskUsers(authentication.currentUser!.uid, userApp),
         ),
       );
 

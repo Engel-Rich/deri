@@ -4,13 +4,15 @@ import 'package:deri/interfaces/adds/addsoustask.dart';
 import 'package:deri/interfaces/app/splash.dart';
 // import 'package:deri/models/user.dart';
 import 'package:deri/variables.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:deri/models/task.dart";
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 
 class DetailTask extends StatefulWidget {
@@ -158,6 +160,7 @@ class _DetailTaslState extends State<DetailTask> {
                                             ),
                                             const SizedBox(
                                               width: 30,
+                                              height: 45,
                                             ),
                                             (reloadNam)
                                                 ? FutureBuilder<UserApp>(
@@ -597,6 +600,10 @@ class _DetailTaslState extends State<DetailTask> {
                                   placeholder: (context, url) {
                                     return spinkit(context);
                                   },
+                                  errorWidget: (context, url, error) =>
+                                      const Center(
+                                          child: Icon(Icons.person,
+                                              size: 45, color: Colors.white)),
                                   fit: BoxFit.cover,
                                 )
                               : const Center(
@@ -609,7 +616,7 @@ class _DetailTaslState extends State<DetailTask> {
                         style: styletitle,
                       ),
                       subtitle: Text(
-                        'UserName',
+                        DateFormat("EE d MM y").format(sousTask.limite),
                         style: styletext,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -666,31 +673,35 @@ class _DetailTaslState extends State<DetailTask> {
                 )
               ],
             ),
-            actions: list
-                .map((user) => !user.fournisseur!
-                    ? ListTile(
-                        title: Text(user.name, style: styletitle),
-                        subtitle: texter(user.email),
-                        leading: const CircleAvatar(
-                          child: Icon(Icons.person),
-                        ),
-                        trailing:
-                            (validUser != null && validUser == user.userid)
-                                ? const Icon(
-                                    Icons.check,
-                                    color: Colors.green,
-                                  )
-                                : const SizedBox.shrink(),
-                        onTap: () {
-                          task.upDateUser(user.userid!);
-                          setState(() {
-                            idUser = user.userid!;
-                          });
-                          Navigator.pop(context);
-                        },
-                      )
-                    : Container())
-                .toList(),
+            content: ListView(
+              padding: EdgeInsets.zero,
+              children: list
+                  .map((user) => !user.fournisseur!
+                      ? ListTile(
+                          title: Text(user.name, style: styletitle),
+                          subtitle: texter(user.email),
+                          leading: const CircleAvatar(
+                            child: Icon(Icons.person),
+                          ),
+                          trailing:
+                              (validUser != null && validUser == user.userid)
+                                  ? const Icon(
+                                      Icons.check,
+                                      color: Colors.green,
+                                    )
+                                  : const SizedBox.shrink(),
+                          onTap: () {
+                            task.upDateUser(user.userid!);
+                            setState(() {
+                              idUser = user.userid!;
+                            });
+                            sendEmail(user, task.titleTask, task.limiteTask);
+                            Navigator.pop(context);
+                          },
+                        )
+                      : Container())
+                  .toList(),
+            ),
           );
         });
   }
@@ -777,51 +788,47 @@ class _DetailTaslState extends State<DetailTask> {
                 )
               ],
             ),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: texter("Annuler")),
+              TextButton(
+                  onPressed: () {
+                    if (percentKey.currentState!.validate()) {
+                      task.setspourcentage(double.parse(percent.text.trim()));
+                      setState(() {
+                        percent.clear();
+                      });
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: texter("Vilad")),
+            ],
             content: Form(
               key: percentKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: percent,
-                    validator: (val) {
-                      if (val!.trim().isEmpty) {
-                        return 'enter required percent value';
-                      } else if (val.trim().length > 3 ||
-                          double.parse(val) > 100) {
-                        return "the value is not grether than 100";
-                      } else {
-                        return null;
-                      }
-                    },
-                    style: styletext,
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      hintStyle: styletext,
-                      border: const UnderlineInputBorder(),
-                      hintText: "enter percent value",
-                    ),
+              child: SizedBox(
+                child: TextFormField(
+                  controller: percent,
+                  validator: (val) {
+                    if (val!.trim().isEmpty) {
+                      return 'enter required percent value';
+                    } else if (val.trim().length > 3 ||
+                        double.parse(val) > 100) {
+                      return "the value is not grether than 100";
+                    } else {
+                      return null;
+                    }
+                  },
+                  style: styletext,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    hintStyle: styletext,
+                    border: const UnderlineInputBorder(),
+                    hintText: "enter percent value",
                   ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: texter("Annuler")),
-                      TextButton(
-                          onPressed: () {
-                            if (percentKey.currentState!.validate()) {
-                              task.setspourcentage(
-                                double.parse(percent.text.trim()),
-                              );
-                            }
-                          },
-                          child: texter("Vilad")),
-                    ],
-                  )
-                ],
+                ),
               ),
             ),
           );
@@ -829,5 +836,50 @@ class _DetailTaslState extends State<DetailTask> {
   }
 
   TextEditingController percent = TextEditingController();
-  final percentKey = GlobalKey<FormFieldState>();
+  final percentKey = GlobalKey<FormState>();
+
+  // send Email
+
+  sendEmail(UserApp userApp, String taskname, DateTime tasklimite) async {
+    final tamplate = {
+      "to_email": userApp.name,
+      "to_name": userApp.email,
+      'task_name': taskname,
+      "dateline": DateFormat("EEEE d MMMM y").format(tasklimite),
+    };
+    final uri = Uri.parse("https://api.emailjs.com/api/v1.0/email/send");
+
+    final respons = await http.post(uri, headers: {
+      'Content-Type': 'application/json'
+    }, body: {
+      "service_id": 'service_p409q0s',
+      "template_id": "template_skf64ba",
+      "user_id": 'uTjB7xuC8AHfn3u13',
+      "accessToken": "5zYG3K0JxUxJL1N-RkNmf",
+      "template_params": {
+        "to_email": userApp.name,
+        "to_name": userApp.email,
+        'task_name': taskname,
+        "dateline": DateFormat("EEEE d MMMM y").format(tasklimite),
+      },
+    });
+
+    if (respons.statusCode == 200) {
+      getSnack(
+        "${userApp.name} sera notifié par email",
+        title: "Notified User",
+        icon: Icon(
+          Icons.check_circle,
+          color: Colors.green.shade200,
+        ),
+        color: Colors.blue.shade200,
+      );
+    } else {
+      if (kDebugMode) {
+        print('Retour');
+        print(respons.body);
+      }
+      getSnack("Erreur d'envoi de Email. ${respons.statusCode}");
+    }
+  }
 }

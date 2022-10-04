@@ -136,13 +136,19 @@ class _ProjetUiState extends State<ProjetUi>
                     backgroundColor: Colors.blue.shade50,
                   ),
                 ),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.arrow_circle_right,
-                      size: 24,
-                      color: Colors.white,
-                    ))
+                projet.pourcentage == 100
+                    ? CircleAvatar(
+                        backgroundColor: Colors.green.shade500,
+                        radius: 15,
+                        child: const Center(
+                            child: Icon(Icons.check,
+                                color: Colors.white, size: 30)),
+                      )
+                    : const Icon(
+                        Icons.arrow_circle_right,
+                        size: 35,
+                        color: Colors.white,
+                      )
               ],
             ),
             const SizedBox(height: 10),

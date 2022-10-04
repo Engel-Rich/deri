@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:data_table_2/data_table_2.dart';
+import 'package:deri/Firebases/firebasedepenses.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 Size taille(BuildContext context) => MediaQuery.of(context).size;
 
@@ -87,6 +90,44 @@ getSnack(
       backgroundColor: color,
       dismissDirection: DismissDirection.horizontal,
     );
+Color bleu = const Color.fromRGBO(6, 57, 112, 0.80);
+List<String> listnom = ['Raison', "Amont", "Date", "Type"];
+Widget showDepenses(List<Depenses> list) {
+  return DataTable(
+    dataRowHeight: 60,
+    showBottomBorder: true,
+    border: TableBorder.all(width: 1.5, color: bleu),
+    headingRowColor:
+        MaterialStateColor.resolveWith((states) => Colors.blue.shade300),
+    columns: listnom
+        .map(
+          (name) => DataColumn(
+            label: Text(
+              name,
+              style: styletitle,
+            ),
+          ),
+        )
+        .toList(),
+    rows: list
+        .map(
+          (depense) => DataRow(
+            cells: detaiDep(depense)
+                .map((elm) =>
+                    DataCell(Text(elm, style: styletext, softWrap: true)))
+                .toList(),
+          ),
+        )
+        .toList(),
+  );
+}
+
+List<String> detaiDep(Depenses depenses) => [
+      depenses.motif,
+      depenses.montant.toString(),
+      DateFormat("EE d MM y").format(depenses.date),
+      depenses.type
+    ];
 // final emo = "🐒💁👌🎍😍🦊👨";
 
 // final iosclientId =

@@ -1,4 +1,5 @@
 // import 'package:date_time_picker/date_time_picker.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:deri/Firebases/firebasedepenses.dart';
 import 'package:deri/interfaces/View/pdfview.dart';
@@ -288,34 +289,64 @@ class _AutresDepensesState extends State<AutresDepenses> {
                             ))
                           : snapshot.hasData
                               ? snapshot.data!.isNotEmpty
-                                  ? ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: ListTile(
-                                            title: Text(
-                                              data![index].motif,
-                                              style: styletitle,
-                                            ),
-                                            subtitle: Text(
-                                                DateFormat("E d MMM yyyy H:m")
-                                                    .format(data[index].date),
-                                                style: styletext),
-                                            trailing: Text(
-                                              '${data[index].montant} F',
-                                              style: styletitle,
-                                            ),
-                                            style: ListTileStyle.list,
-                                            shape: const RoundedRectangleBorder(
-                                              side: BorderSide(),
-                                            ),
-                                          ),
-                                        );
-                                      })
+                                  // ? showDepenses(snapshot.data!)
+
+                                  ? SizedBox(
+                                      width: double.infinity,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        child: showDepenses(snapshot.data!),
+                                        // child: DataTable(
+                                        //   columns: listnom
+                                        //       .map(
+                                        //         (name) => DataColumn(
+                                        //           label: Text(
+                                        //             name,
+                                        //             style: styletitle,
+                                        //           ),
+                                        //         ),
+                                        //       )
+                                        //       .toList(),
+                                        //   rows: snapshot.data!
+                                        //       .map((depense) => DataRow(
+                                        //           cells: detaiDep(depense)
+                                        //               .map((elm) =>
+                                        //                   DataCell(texter(elm)))
+                                        //               .toList()))
+                                        //       .toList(),
+                                        // ),
+                                      ),
+                                    )
+                                  // ListView.builder(
+                                  //     shrinkWrap: true,
+                                  //     physics:
+                                  //         const NeverScrollableScrollPhysics(),
+                                  //     itemCount: snapshot.data!.length,
+                                  //     itemBuilder: (context, index) {
+                                  //       return Padding(
+                                  //         padding: const EdgeInsets.all(8.0),
+                                  //         child: ListTile(
+                                  //           title: Text(
+                                  //             data![index].motif,
+                                  //             style: styletitle,
+                                  //           ),
+                                  //           subtitle: Text(
+                                  //               DateFormat("E d MMM yyyy H:m")
+                                  //                   .format(data[index].date),
+                                  //               style: styletext),
+                                  //           trailing: Text(
+                                  //             '${data[index].montant} F',
+                                  //             style: styletitle,
+                                  //           ),
+                                  //           style: ListTileStyle.list,
+                                  //           shape: const RoundedRectangleBorder(
+                                  //             side: BorderSide(),
+                                  //           ),
+                                  //         ),
+                                  //       );
+                                  //     })
                                   : Center(
                                       child: Text(
                                         'No Datas !',
